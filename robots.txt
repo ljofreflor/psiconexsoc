@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /biblioteca/texto.html
+Disallow: /formacion/actividad.html
+
+Sitemap: https://ljofreflor.github.io/psiconexsoc/sitemap.xml
