@@ -2,6 +2,9 @@ User-agent: *
 Allow: /
 Disallow: /biblioteca/texto.html
 Disallow: /biblioteca/cita.html
+Disallow: /biblioteca/la-palabra-tiene-efectos.html
+Disallow: /biblioteca/el-malestar-tambien-es-de-epoca.html
+Disallow: /biblioteca/las-psicosis-y-sus-vertientes.html
 Disallow: /formacion/actividad.html
 Disallow: /panel.html
 Disallow: /cuenta.html

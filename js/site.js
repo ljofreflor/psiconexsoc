@@ -93,4 +93,9 @@
   cfg.param = function (name) {
     return new URLSearchParams(location.search).get(name) || "";
   };
+
+  if (cfg.param("captura") === "1") {
+    document.documentElement.classList.add("captura-cita");
+    document.body.classList.add("captura-cita");
+  }
 })();

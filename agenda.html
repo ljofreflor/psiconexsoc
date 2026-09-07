@@ -8,7 +8,7 @@
   <meta property="og:title" content="Reservar — PSICONEXSOC">
   <meta property="og:description" content="Reservar una hora en PSICONEXSOC. Se cubre con crédito o pago. Hasta dos reagendamientos al mes.">
   <meta property="og:url" content="https://ljofreflor.github.io/psiconexsoc/agenda.html">
-  <meta property="og:image" content="https://ljofreflor.github.io/psiconexsoc/assets/og-campana.png">
+  <meta property="og:image" content="https://ljofreflor.github.io/psiconexsoc/assets/og-campana.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:type" content="website">
@@ -16,9 +16,14 @@
   <link rel="canonical" href="https://ljofreflor.github.io/psiconexsoc/agenda.html">
   <link rel="icon" href="assets/isotipo.svg">
   <link rel="stylesheet" href="css/main.css?v=20260907">
+  <!-- partial:fonts -->
+  <link rel="preload" href="assets/fonts/inter-latin-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/playfair-latin-400.woff2" as="font" type="font/woff2" crossorigin>
+  <!-- /partial:fonts -->
 </head>
 <body class="regime-campaign">
   <a class="skip" href="#contenido">Ir al contenido</a>
+  <!-- partial:nav -->
   <header class="site-header">
     <div class="wrap header-bar">
       <a class="brand" href="index.html">
@@ -26,10 +31,10 @@
         <span class="brand-name">PSICONEXSOC</span>
       </a>
       <nav class="nav-desktop" aria-label="Principal">
-        <a href="clinica.html">Clínica</a>
-        <a href="biblioteca.html">Biblioteca</a>
-        <a href="equipo.html">Equipo</a>
-        <a href="agenda.html" aria-current="page">Reservar</a>
+        <a href="clinica.html" data-seccion="clinica" aria-current="page">Clínica</a>
+        <a href="biblioteca.html" data-seccion="biblioteca">Biblioteca</a>
+        <a href="equipo.html" data-seccion="equipo">Equipo</a>
+        <a href="contacto.html" data-seccion="contacto">Contacto</a>
       </nav>
       <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="menu-movil">Más</button>
     </div>
@@ -37,38 +42,38 @@
       <div class="wrap">
         <div class="nav-group">
           <h2>Proyecto</h2>
-          <a href="index.html">Inicio</a>
-          <a href="psiconexsoc.html">PSICONEXSOC</a>
-          <a href="equipo.html">Equipo</a>
-          <a href="vinculacion.html">Vinculación internacional</a>
+          <a href="index.html" data-seccion="inicio">Inicio</a>
+          <a href="psiconexsoc.html" data-seccion="proyecto">PSICONEXSOC</a>
+          <a href="equipo.html" data-seccion="equipo">Equipo</a>
+          <a href="vinculacion.html" data-seccion="vinculacion">Vinculación internacional</a>
         </div>
         <div class="nav-group">
           <h2>Clínica</h2>
-          <a href="clinica.html">Atención clínica</a>
-          <a href="agenda.html" aria-current="page">Reservar</a>
-          <a href="cuenta.html">Entrar</a>
+          <a href="clinica.html" data-seccion="clinica" aria-current="page">Atención clínica</a>
+          <a href="clinica.html#orientacion">Orientación inicial</a>
           <a href="clinica.html#faq">Preguntas frecuentes</a>
         </div>
         <div class="nav-group">
           <h2>Investigación</h2>
-          <a href="areas-de-estudio.html">Áreas de estudio</a>
-          <a href="biblioteca.html">Biblioteca</a>
+          <a href="areas-de-estudio.html" data-seccion="areas">Áreas de estudio</a>
+          <a href="biblioteca.html" data-seccion="biblioteca">Biblioteca</a>
         </div>
         <div class="nav-group">
           <h2>Formación</h2>
-          <a href="formacion.html">Formación y actividades</a>
+          <a href="formacion.html" data-seccion="formacion">Formación y actividades</a>
         </div>
         <div class="nav-group">
           <h2>Sociedad</h2>
-          <a href="sociedad.html">Trabajo social</a>
+          <a href="sociedad.html" data-seccion="sociedad">Trabajo social</a>
           <a href="sociedad.html#critica">Crítica cultural</a>
         </div>
         <div class="nav-group">
-          <a href="contacto.html">Contacto</a>
+          <a href="contacto.html" data-seccion="contacto">Contacto</a>
         </div>
       </div>
     </div>
   </header>
+  <!-- /partial:nav -->
   <main id="contenido">
 
     <section class="hero hero-page">
@@ -101,6 +106,7 @@
     </div>
 
   </main>
+  <!-- partial:footer -->
   <footer class="site-footer">
     <div class="wrap footer-grid">
       <div>
@@ -120,7 +126,7 @@
         <a href="psiconexsoc.html">PSICONEXSOC</a>
         <a href="areas-de-estudio.html">Áreas de estudio</a>
         <a href="vinculacion.html">Vinculación</a>
-        <a href="privacidad.html">Privacidad</a>
+        <a href="privacidad.html" data-seccion="privacidad">Privacidad</a>
       </div>
       <div>
         <a href="tel:+56981216395">+56 9 8121 6395</a>
@@ -129,6 +135,7 @@
       </div>
     </div>
   </footer>
+  <!-- /partial:footer -->
   <script src="js/site.js?v=20260907"></script>
   <script src="js/metricas.js?v=20260907"></script>
   <script src="js/nav.js?v=20260907"></script>

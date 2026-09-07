@@ -967,6 +967,7 @@ textarea:focus-visible {
 
 .prose h2 {
   margin-top: var(--space-7);
+  scroll-margin-top: calc(var(--header) + var(--space-4));
 }
 
 .list-plain {
@@ -1710,6 +1711,67 @@ textarea {
 .btn-sso-apple:focus-visible {
   outline: 2px solid #000;
   outline-offset: 2px;
+}
+
+.area-block h3 a,
+.card h3 a {
+  color: inherit;
+}
+
+.quotes-una {
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 36rem;
+}
+
+.quote-ficha {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.quote-ficha:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 4px;
+}
+
+.archivo {
+  margin-top: var(--space-7);
+}
+
+.archivo .object-meta {
+  margin-bottom: 0;
+}
+
+html.captura-cita,
+body.captura-cita {
+  margin: 0;
+  background: #111;
+}
+
+body.captura-cita .skip,
+body.captura-cita .site-header,
+body.captura-cita .site-footer,
+body.captura-cita .page-hero,
+body.captura-cita .note,
+body.captura-cita .reading-bar {
+  display: none;
+}
+
+body.captura-cita main,
+body.captura-cita .section,
+body.captura-cita .wrap,
+body.captura-cita .quotes {
+  margin: 0;
+  padding: 0;
+  max-width: none;
+  width: 1080px;
+}
+
+body.captura-cita .quote {
+  width: 1080px;
+  height: 1080px;
+  aspect-ratio: auto;
+  font-size: 1.35rem;
 }
 
 .salida-clinica {

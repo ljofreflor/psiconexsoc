@@ -8,4 +8,6 @@ Dominio canónico previsto: `https://psiconexsoc.com`. Cuando el DNS apunte a Gi
 
 La reserva clínica: `agenda.html` → `cuenta.html` → `panel.html`. El SQL y las funciones están en `supabase/`. Las claves de Supabase y el dominio de Plausible se rellenan en `js/site.js`. El panel del equipo es `equipo-interno.html` (no está en el menú público).
 
-El desarrollo editorial está en [`docs/documento-maestro.md`](docs/documento-maestro.md).
+Nav y pie se editan en `partials/` y se vuelcan con `node tools/partials.mjs`. `node tools/partials.mjs --check` falla si una página pública quedó desfasada.
+
+El desarrollo editorial está en [`docs/documento-maestro.md`](docs/documento-maestro.md). El corte a `psiconexsoc.com` está escrito en [`docs/05-dominio-psiconexsoc-com.md`](docs/05-dominio-psiconexsoc-com.md): no se aplica hasta que el dominio exista.

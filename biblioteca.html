@@ -8,17 +8,22 @@
   <meta property="og:title" content="Biblioteca PSICONEXSOC">
   <meta property="og:description" content="Ensayos, artículos y conversaciones sobre psicoanálisis, clínica y cultura.">
   <meta property="og:url" content="https://ljofreflor.github.io/psiconexsoc/biblioteca.html">
-  <meta property="og:image" content="https://ljofreflor.github.io/psiconexsoc/assets/og-archivo.png">
+  <meta property="og:image" content="https://ljofreflor.github.io/psiconexsoc/assets/og-archivo.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="canonical" href="https://ljofreflor.github.io/psiconexsoc/biblioteca.html">
   <link rel="icon" href="assets/isotipo.svg">
-  <link rel="stylesheet" href="css/main.css?v=20260906">
+  <link rel="stylesheet" href="css/main.css?v=20260909">
+  <!-- partial:fonts -->
+  <link rel="preload" href="assets/fonts/inter-latin-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/playfair-latin-400.woff2" as="font" type="font/woff2" crossorigin>
+  <!-- /partial:fonts -->
 </head>
 <body class="regime-reading">
   <a class="skip" href="#contenido">Ir al contenido</a>
+  <!-- partial:nav -->
   <header class="site-header">
     <div class="wrap header-bar">
       <a class="brand" href="index.html">
@@ -26,10 +31,10 @@
         <span class="brand-name">PSICONEXSOC</span>
       </a>
       <nav class="nav-desktop" aria-label="Principal">
-        <a href="clinica.html">Clínica</a>
-        <a href="biblioteca.html" aria-current="page">Biblioteca</a>
-        <a href="equipo.html">Equipo</a>
-        <a href="contacto.html">Contacto</a>
+        <a href="clinica.html" data-seccion="clinica">Clínica</a>
+        <a href="biblioteca.html" data-seccion="biblioteca" aria-current="page">Biblioteca</a>
+        <a href="equipo.html" data-seccion="equipo">Equipo</a>
+        <a href="contacto.html" data-seccion="contacto">Contacto</a>
       </nav>
       <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="menu-movil">Más</button>
     </div>
@@ -37,37 +42,38 @@
       <div class="wrap">
         <div class="nav-group">
           <h2>Proyecto</h2>
-          <a href="index.html">Inicio</a>
-          <a href="psiconexsoc.html">PSICONEXSOC</a>
-          <a href="equipo.html">Equipo</a>
-          <a href="vinculacion.html">Vinculación internacional</a>
+          <a href="index.html" data-seccion="inicio">Inicio</a>
+          <a href="psiconexsoc.html" data-seccion="proyecto">PSICONEXSOC</a>
+          <a href="equipo.html" data-seccion="equipo">Equipo</a>
+          <a href="vinculacion.html" data-seccion="vinculacion">Vinculación internacional</a>
         </div>
         <div class="nav-group">
           <h2>Clínica</h2>
-          <a href="clinica.html">Atención clínica</a>
+          <a href="clinica.html" data-seccion="clinica">Atención clínica</a>
           <a href="clinica.html#orientacion">Orientación inicial</a>
           <a href="clinica.html#faq">Preguntas frecuentes</a>
         </div>
         <div class="nav-group">
           <h2>Investigación</h2>
-          <a href="areas-de-estudio.html">Áreas de estudio</a>
-          <a href="biblioteca.html">Biblioteca</a>
+          <a href="areas-de-estudio.html" data-seccion="areas">Áreas de estudio</a>
+          <a href="biblioteca.html" data-seccion="biblioteca" aria-current="page">Biblioteca</a>
         </div>
         <div class="nav-group">
           <h2>Formación</h2>
-          <a href="formacion.html">Formación y actividades</a>
+          <a href="formacion.html" data-seccion="formacion">Formación y actividades</a>
         </div>
         <div class="nav-group">
           <h2>Sociedad</h2>
-          <a href="sociedad.html">Trabajo social</a>
+          <a href="sociedad.html" data-seccion="sociedad">Trabajo social</a>
           <a href="sociedad.html#critica">Crítica cultural</a>
         </div>
         <div class="nav-group">
-          <a href="contacto.html">Contacto</a>
+          <a href="contacto.html" data-seccion="contacto">Contacto</a>
         </div>
       </div>
     </div>
   </header>
+  <!-- /partial:nav -->
   <main id="contenido">
 
     <section class="page-hero">
@@ -84,23 +90,62 @@
           <p>Niveles de lectura: Introducción · Profundización · Lectura especializada.</p>
         </div>
         <div class="quotes">
-          <blockquote class="quote">
-            <p>“…Aún cuando <strong>nuestros sentidos</strong> reaccionan ante fenómenos reales, visuales y sonoros, <strong>son trasladados</strong> en cierto modo desde el reino <strong>de la realidad al de la mente</strong>. Dentro de la mente se convierten en sucesos psíquicos cuya naturaleza última no puede conocerse.”</p>
-            <footer>
-              <strong>Jung, C.</strong> (1964).<br>
-              <em>El hombre y sus símbolos</em>. Editorial Paidós
-            </footer>
-          </blockquote>
-          <blockquote class="quote quote-night">
-            <p>“… La <strong>psiquiatría moderna</strong>, al clasificar, diagnosticar y tratar los <strong>trastornos mentales</strong>, no solo identifica y margina ciertas formas de comportamiento, sino que también produce nuevas formas de <strong>subjetividad</strong>. Los <strong>diagnósticos</strong> psiquiátricos son tecnologías de poder que <strong>moldean la identidad</strong> de los individuos en función de <strong>normativas sociales</strong>.”</p>
-            <footer>
-              <strong>Foucault, M.</strong> (2020).<br>
-              <em>Historia de la locura en la época clásica I</em>
-            </footer>
-          </blockquote>
+          <a class="quote-ficha" href="biblioteca/jung-el-hombre-y-sus-simbolos.html">
+            <blockquote class="quote">
+              <p>“…Aún cuando <strong>nuestros sentidos</strong> reaccionan ante fenómenos reales, visuales y sonoros, <strong>son trasladados</strong> en cierto modo desde el reino <strong>de la realidad al de la mente</strong>. Dentro de la mente se convierten en sucesos psíquicos cuya naturaleza última no puede conocerse.”</p>
+              <footer>
+                <strong>Jung, C.</strong> (1964).<br>
+                <em>El hombre y sus símbolos</em>. Editorial Paidós
+              </footer>
+            </blockquote>
+          </a>
+          <a class="quote-ficha" href="biblioteca/foucault-historia-de-la-locura.html">
+            <blockquote class="quote quote-night">
+              <p>“… La <strong>psiquiatría moderna</strong>, al clasificar, diagnosticar y tratar los <strong>trastornos mentales</strong>, no solo identifica y margina ciertas formas de comportamiento, sino que también produce nuevas formas de <strong>subjetividad</strong>. Los <strong>diagnósticos</strong> psiquiátricos son tecnologías de poder que <strong>moldean la identidad</strong> de los individuos en función de <strong>normativas sociales</strong>.”</p>
+              <footer>
+                <strong>Foucault, M.</strong> (2020).<br>
+                <em>Historia de la locura en la época clásica I</em>
+              </footer>
+            </blockquote>
+          </a>
         </div>
-        <p class="note">Estas piezas salieron primero en Instagram, en formato cuadrado. En el sitio conservan esa medida y la misma tipografía: Playfair Display, carbón sobre papel, sin blanco ni negro puros. La negrita marca las palabras.</p>
-        <div class="empty">Aún no hay ensayos cargados. Cuando existan, aparecerán junto a estas citas. <a href="biblioteca/texto.html">La ficha de un texto ya está lista</a>. <a href="biblioteca/cita.html">La ficha de una cita también</a>.</div>
+        <p class="note">El sitio es la fuente; Instagram, el extracto. Cada pieza tiene permalink y una imagen 1:1 tomada de esta misma tipografía.</p>
+        <div class="card-grid archivo">
+          <article class="card">
+            <p class="section-kicker">Introducción</p>
+            <h3><a href="biblioteca/la-palabra-tiene-efectos.html">La palabra tiene efectos</a></h3>
+            <p>Por qué la clínica empieza cuando alguien puede decir, y no cuando se le aplica un nombre.</p>
+            <p class="object-meta">
+              <span>PSICONEXSOC</span>
+              <span>7 de septiembre de 2026</span>
+              <span>8 min</span>
+              <span>Borrador</span>
+            </p>
+          </article>
+          <article class="card">
+            <p class="section-kicker">Profundización</p>
+            <h3><a href="biblioteca/el-malestar-tambien-es-de-epoca.html">El malestar también es de época</a></h3>
+            <p>El sufrimiento es singular, pero no ocurre fuera de la historia ni de los discursos que lo nombran.</p>
+            <p class="object-meta">
+              <span>PSICONEXSOC</span>
+              <span>7 de septiembre de 2026</span>
+              <span>10 min</span>
+              <span>Borrador</span>
+            </p>
+          </article>
+          <article class="card">
+            <p class="section-kicker">Lectura especializada</p>
+            <h3><a href="biblioteca/las-psicosis-y-sus-vertientes.html">Las psicosis y sus vertientes</a></h3>
+            <p>El campo prioritario de investigación, leído como mapa y no como catálogo.</p>
+            <p class="object-meta">
+              <span>PSICONEXSOC</span>
+              <span>7 de septiembre de 2026</span>
+              <span>12 min</span>
+              <span>Borrador</span>
+            </p>
+          </article>
+        </div>
+        <p class="note">Los tres ensayos están a la espera de la firma del equipo: se leen aquí y todavía no se indexan.</p>
         <div class="salida-clinica actions">
           <a class="btn btn-primary" href="agenda.html?desde=biblioteca">Reservar una hora</a>
         </div>
@@ -108,6 +153,7 @@
     </section>
 
   </main>
+  <!-- partial:footer -->
   <footer class="site-footer">
     <div class="wrap footer-grid">
       <div>
@@ -127,7 +173,7 @@
         <a href="psiconexsoc.html">PSICONEXSOC</a>
         <a href="areas-de-estudio.html">Áreas de estudio</a>
         <a href="vinculacion.html">Vinculación</a>
-        <a href="privacidad.html">Privacidad</a>
+        <a href="privacidad.html" data-seccion="privacidad">Privacidad</a>
       </div>
       <div>
         <a href="tel:+56981216395">+56 9 8121 6395</a>
@@ -136,6 +182,7 @@
       </div>
     </div>
   </footer>
+  <!-- /partial:footer -->
   <script src="js/site.js?v=20260905"></script>
   <script src="js/metricas.js?v=20260907"></script>
   <script src="js/nav.js?v=20260905"></script>
