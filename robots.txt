@@ -1,6 +1,11 @@
 User-agent: *
 Allow: /
 Disallow: /biblioteca/texto.html
+Disallow: /biblioteca/cita.html
 Disallow: /formacion/actividad.html
+Disallow: /panel.html
+Disallow: /cuenta.html
+Disallow: /equipo-interno.html
+Disallow: /gift.html
 
 Sitemap: https://ljofreflor.github.io/psiconexsoc/sitemap.xml

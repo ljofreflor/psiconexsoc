@@ -15,9 +15,9 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="canonical" href="https://ljofreflor.github.io/psiconexsoc/">
   <link rel="icon" href="assets/isotipo.svg">
-  <link rel="stylesheet" href="css/main.css?v=20260906">
+  <link rel="stylesheet" href="css/main.css?v=20260908g">
   <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":["ProfessionalService","EducationalOrganization"],"name":"PSICONEXSOC","description":"Clínica, investigación y divulgación psicoanalítica","url":"https://ljofreflor.github.io/psiconexsoc/","email":"contacto@psiconexsoc.com","telephone":"+56981216395","areaServed":"CL"}
+  {"@context":"https://schema.org","@type":["ProfessionalService","EducationalOrganization"],"name":"PSICONEXSOC","description":"Clínica, investigación y divulgación psicoanalítica","url":"https://ljofreflor.github.io/psiconexsoc/","telephone":"+56981216395","areaServed":"CL"}
   </script>
 </head>
 <body class="regime-campaign">
@@ -77,7 +77,7 @@
       <div class="wrap">
         <p class="hero-kicker">Clínica, investigación y divulgación psicoanalítica</p>
         <h1 class="hero-title">La palabra tiene efectos.</h1>
-        <a class="btn btn-on-orange" href="contacto.html">Solicitar orientación clínica gratuita</a>
+        <a class="btn btn-on-orange" href="agenda.html?desde=portada">Reservar una hora</a>
         <p class="hero-listen">
           <button type="button" class="listen" data-consigna>Escuchar la consigna</button>
         </p>
@@ -92,10 +92,101 @@
       </div>
     </section>
 
+    <section class="grafo" data-grafo aria-labelledby="grafo-titulo">
+      <h2 class="grafo-titulo" id="grafo-titulo">El grafo del deseo</h2>
+      <div class="grafo-lienzo">
+
+        <!-- Un solo filtro de tiza para el grafo y el retrato: el temblor vive
+             aquí, no en una librería. url(#tiza) cruza ambos SVG. -->
+        <svg class="grafo-defs" width="1" height="1" aria-hidden="true" focusable="false">
+          <filter id="tiza" x="-12%" y="-12%" width="124%" height="124%" color-interpolation-filters="sRGB">
+            <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="4" seed="7" result="grano"/>
+            <feDisplacementMap in="SourceGraphic" in2="grano" scale="1.9" xChannelSelector="R" yChannelSelector="G" result="temblor"/>
+            <feGaussianBlur in="temblor" stdDeviation="0.45" result="polvo"/>
+            <feMerge>
+              <feMergeNode in="polvo"/>
+              <feMergeNode in="temblor"/>
+            </feMerge>
+          </filter>
+        </svg>
+
+        <div class="grafo-pizarra" aria-hidden="true"></div>
+
+        <!-- Lacan es la misma tiza que los matemas: contorno y trama escritos con
+             el mismo dashoffset y el mismo recorrido. Vacío hasta que haya un
+             dibujo de origen legítimo; el aura no se finge. -->
+        <div class="grafo-aura" aria-hidden="true">
+          <svg class="grafo-retrato" data-grafo-retrato preserveAspectRatio="xMidYMid meet"></svg>
+        </div>
+        <div class="grafo-velo" aria-hidden="true"></div>
+        <div class="grafo-luz" aria-hidden="true"></div>
+        <div class="grafo-polvo" aria-hidden="true"></div>
+
+        <svg class="grafo-figura" viewBox="0 0 1000 720" preserveAspectRatio="xMidYMid meet" role="img"
+             aria-label="El grafo del deseo de Lacan: el anzuelo de la intenci&#243;n va de delta al sujeto barrado y corta dos veces cada cadena significante.">
+          <!-- Célula: primero la cadena S→S′, después el anzuelo Δ→$ la corta.
+               Corona corta como la grapilla de Graph I, no una mesa: 44 u en
+               lo alto, y los nudos del piso II siguen cayendo en y=141. -->
+          <g class="grafo-estrato" data-estrato="1">
+            <path data-trazo pathLength="1" style="--in:0;--span:.46" d="M 70 430 C 160 350 250 325 330 323 C 430 318 570 318 669 323 C 750 325 850 350 930 430"/>
+            <path data-trazo pathLength="1" style="--in:.42;--span:.58" d="M 609 618 C 630 500 670 340 689 210 C 698 175 665 74 522 42 C 510 40 490 40 478 42 C 335 74 302 175 311 210 C 330 340 370 500 382 618"/>
+            <circle class="grafo-nudo" style="--in:.62" cx="669" cy="323" r="13"/>
+            <circle class="grafo-nudo" style="--in:.86" cx="330" cy="323" r="13"/>
+            <path class="grafo-punta grafo-punta-hueca" style="--in:.08" d="M 59.6 452.1 L 71.1 429.0 L 46.8 437.8"/>
+            <path class="grafo-punta" style="--in:.42" d="M 931.1 431.1 L 907.3 420.9 L 920.9 407.3 z"/>
+            <path class="grafo-punta grafo-punta-hueca" style="--in:.44" d="M 614.5 641.8 L 609.3 616.5 L 595.6 638.5"/>
+            <path class="grafo-punta" style="--in:.92" d="M 382.2 619.5 L 370.2 596.6 L 389.3 594.6 z"/>
+            <svg class="grafo-letra" style="--in:.44" x="628.0" y="622.2" width="30.0" height="25.8" viewBox="0 -716 833 716" aria-hidden="true" transform="rotate(8 628 648)"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mi"><path data-c="394" d="M51 0Q46 4 46 7Q46 9 215 357T388 709Q391 716 416 716Q439 716 444 709Q447 705 616 357T786 7Q786 4 781 0H51ZM507 344L384 596L137 92L383 91H630Q630 93 507 344Z"></path></g></g></g></svg>
+            <svg class="grafo-letra" style="--in:.92" x="344.8" y="629.6" width="23.2" height="26.2" viewBox="0 -705 645 727" aria-hidden="true"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mi"><path data-c="1D446" d="M308 24Q367 24 416 76T466 197Q466 260 414 284Q308 311 278 321T236 341Q176 383 176 462Q176 523 208 573T273 648Q302 673 343 688T407 704H418H425Q521 704 564 640Q565 640 577 653T603 682T623 704Q624 704 627 704T632 705Q645 705 645 698T617 577T585 459T569 456Q549 456 549 465Q549 471 550 475Q550 478 551 494T553 520Q553 554 544 579T526 616T501 641Q465 662 419 662Q362 662 313 616T263 510Q263 480 278 458T319 427Q323 425 389 408T456 390Q490 379 522 342T554 242Q554 216 546 186Q541 164 528 137T492 78T426 18T332 -20Q320 -22 298 -22Q199 -22 144 33L134 44L106 13Q83 -14 78 -18T65 -22Q52 -22 52 -14Q52 -11 110 221Q112 227 130 227H143Q149 221 149 216Q149 214 148 207T144 186T142 153Q144 114 160 87T203 47T255 29T308 24Z"></path></g></g></g><line x1="400" y1="-690" x2="400" y2="15" stroke-width="58" /></svg>
+            <svg class="grafo-letra" style="--in:.06" x="34.8" y="404.6" width="23.2" height="26.2" viewBox="0 -705 645 727" aria-hidden="true"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mi"><path data-c="1D446" d="M308 24Q367 24 416 76T466 197Q466 260 414 284Q308 311 278 321T236 341Q176 383 176 462Q176 523 208 573T273 648Q302 673 343 688T407 704H418H425Q521 704 564 640Q565 640 577 653T603 682T623 704Q624 704 627 704T632 705Q645 705 645 698T617 577T585 459T569 456Q549 456 549 465Q549 471 550 475Q550 478 551 494T553 520Q553 554 544 579T526 616T501 641Q465 662 419 662Q362 662 313 616T263 510Q263 480 278 458T319 427Q323 425 389 408T456 390Q490 379 522 342T554 242Q554 216 546 186Q541 164 528 137T492 78T426 18T332 -20Q320 -22 298 -22Q199 -22 144 33L134 44L106 13Q83 -14 78 -18T65 -22Q52 -22 52 -14Q52 -11 110 221Q112 227 130 227H143Q149 221 149 216Q149 214 148 207T144 186T142 153Q144 114 160 87T203 47T255 29T308 24Z"></path></g></g></g></svg>
+            <svg class="grafo-letra" style="--in:.40" x="948.0" y="402.7" width="35.1" height="28.1" viewBox="0 -759 974.1 781" aria-hidden="true"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="msup"><g data-mml-node="mi"><path data-c="1D446" d="M308 24Q367 24 416 76T466 197Q466 260 414 284Q308 311 278 321T236 341Q176 383 176 462Q176 523 208 573T273 648Q302 673 343 688T407 704H418H425Q521 704 564 640Q565 640 577 653T603 682T623 704Q624 704 627 704T632 705Q645 705 645 698T617 577T585 459T569 456Q549 456 549 465Q549 471 550 475Q550 478 551 494T553 520Q553 554 544 579T526 616T501 641Q465 662 419 662Q362 662 313 616T263 510Q263 480 278 458T319 427Q323 425 389 408T456 390Q490 379 522 342T554 242Q554 216 546 186Q541 164 528 137T492 78T426 18T332 -20Q320 -22 298 -22Q199 -22 144 33L134 44L106 13Q83 -14 78 -18T65 -22Q52 -22 52 -14Q52 -11 110 221Q112 227 130 227H143Q149 221 149 216Q149 214 148 207T144 186T142 153Q144 114 160 87T203 47T255 29T308 24Z"></path></g><g data-mml-node="mo" transform="translate(729.6,363) scale(0.707)"><path data-c="2032" d="M79 43Q73 43 52 49T30 61Q30 68 85 293T146 528Q161 560 198 560Q218 560 240 545T262 501Q262 496 260 486Q259 479 173 263T84 45T79 43Z"></path></g></g></g></g></svg>
+          </g>
+
+          <!-- Piso I: primero se nombran los nudos de la célula; la cuerda
+               i(a)→m se escribe después, y corta el anzuelo en vez de flotar. -->
+          <g class="grafo-estrato" data-estrato="2">
+            <path data-trazo pathLength="1" style="--in:.40;--span:.58" d="M 698 500 C 618 542 378 542 298 500"/>
+            <path class="grafo-punta" style="--in:.88" d="M 298.0 500.0 L 324.4 501.4 L 314.1 520.9 z"/>
+            <svg class="grafo-letra" style="--in:.12" x="690.0" y="286.2" width="27.0" height="25.8" viewBox="0 -716 750 716" aria-hidden="true"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="TeXAtom" data-mjx-texclass="ORD"><g data-mml-node="mi"><path data-c="41" d="M255 0Q240 3 140 3Q48 3 39 0H32V46H47Q119 49 139 88Q140 91 192 245T295 553T348 708Q351 716 366 716H376Q396 715 400 709Q402 707 508 390L617 67Q624 54 636 51T687 46H717V0H708Q699 3 581 3Q458 3 437 0H427V46H440Q510 46 510 64Q510 66 486 138L462 209H229L209 150Q189 91 189 85Q189 72 209 59T259 46H264V0H255ZM447 255L345 557L244 256Q244 255 345 255H447Z"></path></g></g></g></g></svg>
+            <svg class="grafo-letra" style="--in:.28" x="246.1" y="285.0" width="71.9" height="36.0" viewBox="0 -750 1997 1000" aria-hidden="true"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mi"><path data-c="1D460" d="M131 289Q131 321 147 354T203 415T300 442Q362 442 390 415T419 355Q419 323 402 308T364 292Q351 292 340 300T328 326Q328 342 337 354T354 372T367 378Q368 378 368 379Q368 382 361 388T336 399T297 405Q249 405 227 379T204 326Q204 301 223 291T278 274T330 259Q396 230 396 163Q396 135 385 107T352 51T289 7T195 -10Q118 -10 86 19T53 87Q53 126 74 143T118 160Q133 160 146 151T160 120Q160 94 142 76T111 58Q109 57 108 57T107 55Q108 52 115 47T146 34T201 27Q237 27 263 38T301 66T318 97T323 122Q323 150 302 164T254 181T195 196T148 231Q131 256 131 289Z"></path></g><g data-mml-node="mo" transform="translate(469,0)"><path data-c="28" d="M94 250Q94 319 104 381T127 488T164 576T202 643T244 695T277 729T302 750H315H319Q333 750 333 741Q333 738 316 720T275 667T226 581T184 443T167 250T184 58T225 -81T274 -167T316 -220T333 -241Q333 -250 318 -250H315H302L274 -226Q180 -141 137 -14T94 250Z"></path></g><g data-mml-node="TeXAtom" data-mjx-texclass="ORD" transform="translate(858,0)"><g data-mml-node="mi"><path data-c="41" d="M255 0Q240 3 140 3Q48 3 39 0H32V46H47Q119 49 139 88Q140 91 192 245T295 553T348 708Q351 716 366 716H376Q396 715 400 709Q402 707 508 390L617 67Q624 54 636 51T687 46H717V0H708Q699 3 581 3Q458 3 437 0H427V46H440Q510 46 510 64Q510 66 486 138L462 209H229L209 150Q189 91 189 85Q189 72 209 59T259 46H264V0H255ZM447 255L345 557L244 256Q244 255 345 255H447Z"></path></g></g><g data-mml-node="mo" transform="translate(1608,0)"><path data-c="29" d="M60 749L64 750Q69 750 74 750H86L114 726Q208 641 251 514T294 250Q294 182 284 119T261 12T224 -76T186 -143T145 -194T113 -227T90 -246Q87 -249 86 -250H74Q66 -250 63 -250T58 -247T55 -238Q56 -237 66 -225Q221 -64 221 250T66 725Q56 737 55 738Q55 746 60 749Z"></path></g></g></g></svg>
+            <svg class="grafo-letra" style="--in:.42" x="708.0" y="505.0" width="59.5" height="36.0" viewBox="0 -750 1652 1000" aria-hidden="true"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mi"><path data-c="1D456" d="M184 600Q184 624 203 642T247 661Q265 661 277 649T290 619Q290 596 270 577T226 557Q211 557 198 567T184 600ZM21 287Q21 295 30 318T54 369T98 420T158 442Q197 442 223 419T250 357Q250 340 236 301T196 196T154 83Q149 61 149 51Q149 26 166 26Q175 26 185 29T208 43T235 78T260 137Q263 149 265 151T282 153Q302 153 302 143Q302 135 293 112T268 61T223 11T161 -11Q129 -11 102 10T74 74Q74 91 79 106T122 220Q160 321 166 341T173 380Q173 404 156 404H154Q124 404 99 371T61 287Q60 286 59 284T58 281T56 279T53 278T49 278T41 278H27Q21 284 21 287Z"></path></g><g data-mml-node="mo" transform="translate(345,0)"><path data-c="28" d="M94 250Q94 319 104 381T127 488T164 576T202 643T244 695T277 729T302 750H315H319Q333 750 333 741Q333 738 316 720T275 667T226 581T184 443T167 250T184 58T225 -81T274 -167T316 -220T333 -241Q333 -250 318 -250H315H302L274 -226Q180 -141 137 -14T94 250Z"></path></g><g data-mml-node="mi" transform="translate(734,0)"><path data-c="1D44E" d="M33 157Q33 258 109 349T280 441Q331 441 370 392Q386 422 416 422Q429 422 439 414T449 394Q449 381 412 234T374 68Q374 43 381 35T402 26Q411 27 422 35Q443 55 463 131Q469 151 473 152Q475 153 483 153H487Q506 153 506 144Q506 138 501 117T481 63T449 13Q436 0 417 -8Q409 -10 393 -10Q359 -10 336 5T306 36L300 51Q299 52 296 50Q294 48 292 46Q233 -10 172 -10Q117 -10 75 30T33 157ZM351 328Q351 334 346 350T323 385T277 405Q242 405 210 374T160 293Q131 214 119 129Q119 126 119 118T118 106Q118 61 136 44T179 26Q217 26 254 59T298 110Q300 114 325 217T351 328Z"></path></g><g data-mml-node="mo" transform="translate(1263,0)"><path data-c="29" d="M60 749L64 750Q69 750 74 750H86L114 726Q208 641 251 514T294 250Q294 182 284 119T261 12T224 -76T186 -143T145 -194T113 -227T90 -246Q87 -249 86 -250H74Q66 -250 63 -250T58 -247T55 -238Q56 -237 66 -225Q221 -64 221 250T66 725Q56 737 55 738Q55 746 60 749Z"></path></g></g></g></svg>
+            <svg class="grafo-letra" style="--in:.88" x="253.4" y="512.1" width="31.6" height="16.3" viewBox="0 -442 878 453" aria-hidden="true"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mi"><path data-c="1D45A" d="M21 287Q22 293 24 303T36 341T56 388T88 425T132 442T175 435T205 417T221 395T229 376L231 369Q231 367 232 367L243 378Q303 442 384 442Q401 442 415 440T441 433T460 423T475 411T485 398T493 385T497 373T500 364T502 357L510 367Q573 442 659 442Q713 442 746 415T780 336Q780 285 742 178T704 50Q705 36 709 31T724 26Q752 26 776 56T815 138Q818 149 821 151T837 153Q857 153 857 145Q857 144 853 130Q845 101 831 73T785 17T716 -10Q669 -10 648 17T627 73Q627 92 663 193T700 345Q700 404 656 404H651Q565 404 506 303L499 291L466 157Q433 26 428 16Q415 -11 385 -11Q372 -11 364 -4T353 8T350 18Q350 29 384 161L420 307Q423 322 423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 181Q151 335 151 342Q154 357 154 369Q154 405 129 405Q107 405 92 377T69 316T57 280Q55 278 41 278H27Q21 284 21 287Z"></path></g></g></g></svg>
+            <svg class="grafo-letra" style="--in:.84" x="299.3" y="385.0" width="18.7" height="25.3" viewBox="0 -694 520 704" aria-hidden="true"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mi"><path data-c="1D451" d="M366 683Q367 683 438 688T511 694Q523 694 523 686Q523 679 450 384T375 83T374 68Q374 26 402 26Q411 27 422 35Q443 55 463 131Q469 151 473 152Q475 153 483 153H487H491Q506 153 506 145Q506 140 503 129Q490 79 473 48T445 8T417 -8Q409 -10 393 -10Q359 -10 336 5T306 36L300 51Q299 52 296 50Q294 48 292 46Q233 -10 172 -10Q117 -10 75 30T33 157Q33 205 53 255T101 341Q148 398 195 420T280 442Q336 442 364 400Q369 394 369 396Q370 400 396 505T424 616Q424 629 417 632T378 637H357Q351 643 351 645T353 664Q358 683 366 683ZM352 326Q329 405 277 405Q242 405 210 374T160 293Q131 214 119 129Q119 126 119 118T118 106Q118 61 136 44T179 26Q233 26 290 98L298 109L352 326Z"></path></g></g></g></svg>
+            <svg class="grafo-letra" style="--in:.90" x="46.8" y="628.0" width="73.2" height="36.0" viewBox="0 -750 2032 1000" aria-hidden="true"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mi"><path data-c="1D43C" d="M43 1Q26 1 26 10Q26 12 29 24Q34 43 39 45Q42 46 54 46H60Q120 46 136 53Q137 53 138 54Q143 56 149 77T198 273Q210 318 216 344Q286 624 286 626Q284 630 284 631Q274 637 213 637H193Q184 643 189 662Q193 677 195 680T209 683H213Q285 681 359 681Q481 681 487 683H497Q504 676 504 672T501 655T494 639Q491 637 471 637Q440 637 407 634Q393 631 388 623Q381 609 337 432Q326 385 315 341Q245 65 245 59Q245 52 255 50T307 46H339Q345 38 345 37T342 19Q338 6 332 0H316Q279 2 179 2Q143 2 113 2T65 2T43 1Z"></path></g><g data-mml-node="mo" transform="translate(504,0)"><path data-c="28" d="M94 250Q94 319 104 381T127 488T164 576T202 643T244 695T277 729T302 750H315H319Q333 750 333 741Q333 738 316 720T275 667T226 581T184 443T167 250T184 58T225 -81T274 -167T316 -220T333 -241Q333 -250 318 -250H315H302L274 -226Q180 -141 137 -14T94 250Z"></path></g><g data-mml-node="TeXAtom" data-mjx-texclass="ORD" transform="translate(893,0)"><g data-mml-node="mi"><path data-c="41" d="M255 0Q240 3 140 3Q48 3 39 0H32V46H47Q119 49 139 88Q140 91 192 245T295 553T348 708Q351 716 366 716H376Q396 715 400 709Q402 707 508 390L617 67Q624 54 636 51T687 46H717V0H708Q699 3 581 3Q458 3 437 0H427V46H440Q510 46 510 64Q510 66 486 138L462 209H229L209 150Q189 91 189 85Q189 72 209 59T259 46H264V0H255ZM447 255L345 557L244 256Q244 255 345 255H447Z"></path></g></g><g data-mml-node="mo" transform="translate(1643,0)"><path data-c="29" d="M60 749L64 750Q69 750 74 750H86L114 726Q208 641 251 514T294 250Q294 182 284 119T261 12T224 -76T186 -143T145 -194T113 -227T90 -246Q87 -249 86 -250H74Q66 -250 63 -250T58 -247T55 -238Q56 -237 66 -225Q221 -64 221 250T66 725Q56 737 55 738Q55 746 60 749Z"></path></g></g></g></svg>
+          </g>
+
+          <!-- Piso II: la cadena del inconsciente rima con S→S′: goce y
+               castración van en las alas, sentados sobre el trazo como S y S′,
+               no encima de la punta. -->
+          <g class="grafo-estrato" data-estrato="3">
+            <path data-trazo pathLength="1" style="--in:0;--span:.55" d="M 70 205 C 165 148 250 140 327 141 C 420 128 580 128 673 141 C 760 148 845 168 918 202"/>
+            <path data-trazo pathLength="1" style="--in:.48;--span:.52" d="M 735 250 C 640 288 360 288 260 250"/>
+            <circle class="grafo-nudo" style="--in:.18" cx="327" cy="141" r="13"/>
+            <circle class="grafo-nudo" style="--in:.38" cx="673" cy="141" r="13"/>
+            <path class="grafo-punta grafo-punta-hueca" style="--in:.08" d="M 57.3 226.6 L 70.0 205.0 L 45.0 206.0"/>
+            <path class="grafo-punta" style="--in:.52" d="M 918.0 202.0 L 891.6 201.8 L 900.9 181.9 z"/>
+            <path class="grafo-punta" style="--in:.92" d="M 260.0 250.0 L 286.3 248.2 L 278.5 268.8 z"/>
+            <svg class="grafo-letra" style="--in:.14" x="239.8" y="101.0" width="78.2" height="36.0" viewBox="0 -750 2173 1000" aria-hidden="true"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mi"><path data-c="1D446" d="M308 24Q367 24 416 76T466 197Q466 260 414 284Q308 311 278 321T236 341Q176 383 176 462Q176 523 208 573T273 648Q302 673 343 688T407 704H418H425Q521 704 564 640Q565 640 577 653T603 682T623 704Q624 704 627 704T632 705Q645 705 645 698T617 577T585 459T569 456Q549 456 549 465Q549 471 550 475Q550 478 551 494T553 520Q553 554 544 579T526 616T501 641Q465 662 419 662Q362 662 313 616T263 510Q263 480 278 458T319 427Q323 425 389 408T456 390Q490 379 522 342T554 242Q554 216 546 186Q541 164 528 137T492 78T426 18T332 -20Q320 -22 298 -22Q199 -22 144 33L134 44L106 13Q83 -14 78 -18T65 -22Q52 -22 52 -14Q52 -11 110 221Q112 227 130 227H143Q149 221 149 216Q149 214 148 207T144 186T142 153Q144 114 160 87T203 47T255 29T308 24Z"></path></g><g data-mml-node="mo" transform="translate(645,0)"><path data-c="28" d="M94 250Q94 319 104 381T127 488T164 576T202 643T244 695T277 729T302 750H315H319Q333 750 333 741Q333 738 316 720T275 667T226 581T184 443T167 250T184 58T225 -81T274 -167T316 -220T333 -241Q333 -250 318 -250H315H302L274 -226Q180 -141 137 -14T94 250Z"></path></g><g data-mml-node="TeXAtom" data-mjx-texclass="ORD" transform="translate(1034,0)"><g data-mml-node="mi"><path data-c="41" d="M255 0Q240 3 140 3Q48 3 39 0H32V46H47Q119 49 139 88Q140 91 192 245T295 553T348 708Q351 716 366 716H376Q396 715 400 709Q402 707 508 390L617 67Q624 54 636 51T687 46H717V0H708Q699 3 581 3Q458 3 437 0H427V46H440Q510 46 510 64Q510 66 486 138L462 209H229L209 150Q189 91 189 85Q189 72 209 59T259 46H264V0H255ZM447 255L345 557L244 256Q244 255 345 255H447Z"></path></g></g><g data-mml-node="mo" transform="translate(1784,0)"><path data-c="29" d="M60 749L64 750Q69 750 74 750H86L114 726Q208 641 251 514T294 250Q294 182 284 119T261 12T224 -76T186 -143T145 -194T113 -227T90 -246Q87 -249 86 -250H74Q66 -250 63 -250T58 -247T55 -238Q56 -237 66 -225Q221 -64 221 250T66 725Q56 737 55 738Q55 746 60 749Z"></path></g></g></g><line x1="1355" y1="-600" x2="1680" y2="-40" stroke-width="58" /></svg>
+            <svg class="grafo-letra" style="--in:.28" x="694.0" y="104.2" width="74.7" height="30.5" viewBox="0 -716 2076 848" aria-hidden="true"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mi"><path data-c="1D446" d="M308 24Q367 24 416 76T466 197Q466 260 414 284Q308 311 278 321T236 341Q176 383 176 462Q176 523 208 573T273 648Q302 673 343 688T407 704H418H425Q521 704 564 640Q565 640 577 653T603 682T623 704Q624 704 627 704T632 705Q645 705 645 698T617 577T585 459T569 456Q549 456 549 465Q549 471 550 475Q550 478 551 494T553 520Q553 554 544 579T526 616T501 641Q465 662 419 662Q362 662 313 616T263 510Q263 480 278 458T319 427Q323 425 389 408T456 390Q490 379 522 342T554 242Q554 216 546 186Q541 164 528 137T492 78T426 18T332 -20Q320 -22 298 -22Q199 -22 144 33L134 44L106 13Q83 -14 78 -18T65 -22Q52 -22 52 -14Q52 -11 110 221Q112 227 130 227H143Q149 221 149 216Q149 214 148 207T144 186T142 153Q144 114 160 87T203 47T255 29T308 24Z"></path></g><g data-mml-node="mi" transform="translate(645,0)"><path data-c="25CA" d="M318 709Q325 716 332 716Q340 716 344 713T474 511Q611 298 611 292Q611 285 526 152Q494 103 474 72Q347 -128 344 -130Q340 -132 333 -132T322 -130Q319 -128 257 -31T131 169T60 278Q56 285 56 292Q56 298 60 305Q73 326 194 516T318 709ZM567 290T567 291T451 475T333 658L100 293Q100 288 215 108L333 -74Q334 -74 450 108Z"></path></g><g data-mml-node="TeXAtom" data-mjx-texclass="ORD" transform="translate(1312,0)"><g data-mml-node="mi"><path data-c="44" d="M130 622Q123 629 119 631T103 634T60 637H27V683H228Q399 682 419 682T461 676Q504 667 546 641T626 573T685 470T708 336Q708 210 634 116T442 3Q429 1 228 0H27V46H60Q102 47 111 49T130 61V622ZM593 338Q593 439 571 501T493 602Q439 637 355 637H322H294Q238 637 234 628Q231 624 231 344Q231 62 232 59Q233 49 248 48T339 46H350Q456 46 515 95Q561 133 577 191T593 338Z"></path></g></g></g></g><line x1="400" y1="-690" x2="400" y2="15" stroke-width="58" /></svg>
+            <svg class="grafo-letra" style="--in:.56" x="742.0" y="212.2" width="66.3" height="30.5" viewBox="0 -716 1841 848" aria-hidden="true"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mi"><path data-c="1D446" d="M308 24Q367 24 416 76T466 197Q466 260 414 284Q308 311 278 321T236 341Q176 383 176 462Q176 523 208 573T273 648Q302 673 343 688T407 704H418H425Q521 704 564 640Q565 640 577 653T603 682T623 704Q624 704 627 704T632 705Q645 705 645 698T617 577T585 459T569 456Q549 456 549 465Q549 471 550 475Q550 478 551 494T553 520Q553 554 544 579T526 616T501 641Q465 662 419 662Q362 662 313 616T263 510Q263 480 278 458T319 427Q323 425 389 408T456 390Q490 379 522 342T554 242Q554 216 546 186Q541 164 528 137T492 78T426 18T332 -20Q320 -22 298 -22Q199 -22 144 33L134 44L106 13Q83 -14 78 -18T65 -22Q52 -22 52 -14Q52 -11 110 221Q112 227 130 227H143Q149 221 149 216Q149 214 148 207T144 186T142 153Q144 114 160 87T203 47T255 29T308 24Z"></path></g><g data-mml-node="mi" transform="translate(645,0)"><path data-c="25CA" d="M318 709Q325 716 332 716Q340 716 344 713T474 511Q611 298 611 292Q611 285 526 152Q494 103 474 72Q347 -128 344 -130Q340 -132 333 -132T322 -130Q319 -128 257 -31T131 169T60 278Q56 285 56 292Q56 298 60 305Q73 326 194 516T318 709ZM567 290T567 291T451 475T333 658L100 293Q100 288 215 108L333 -74Q334 -74 450 108Z"></path></g><g data-mml-node="mi" transform="translate(1312,0)"><path data-c="1D44E" d="M33 157Q33 258 109 349T280 441Q331 441 370 392Q386 422 416 422Q429 422 439 414T449 394Q449 381 412 234T374 68Q374 43 381 35T402 26Q411 27 422 35Q443 55 463 131Q469 151 473 152Q475 153 483 153H487Q506 153 506 144Q506 138 501 117T481 63T449 13Q436 0 417 -8Q409 -10 393 -10Q359 -10 336 5T306 36L300 51Q299 52 296 50Q294 48 292 46Q233 -10 172 -10Q117 -10 75 30T33 157ZM351 328Q351 334 346 350T323 385T277 405Q242 405 210 374T160 293Q131 214 119 129Q119 126 119 118T118 106Q118 61 136 44T179 26Q217 26 254 59T298 110Q300 114 325 217T351 328Z"></path></g></g></g><line x1="400" y1="-690" x2="400" y2="15" stroke-width="58" /></svg>
+            <text class="grafo-letra grafo-letra-menor" style="--in:.06" x="28" y="190">goce</text>
+            <text class="grafo-letra grafo-letra-menor" style="--in:.50" x="990" y="158" text-anchor="end">castraci&#243;n</text>
+          </g>
+
+        </svg>
+
+        <p class="grafo-oido">
+          <button type="button" class="listen" data-grafo-oido>Encender el o&#237;do</button>
+          <audio data-grafo-audio preload="none" loop></audio>
+        </p>
+
+      </div>
+    </section>
+
     <nav class="looks" aria-label="Secciones">
       <a class="look look-clinic" href="clinica.html">
         <span>Clínica</span>
-        <em>Orientación inicial gratuita</em>
+        <em>Reservar una hora</em>
       </a>
       <a class="look look-archive" href="biblioteca.html">
         <span>Biblioteca</span>
@@ -118,7 +209,7 @@
     <section class="close">
       <div class="wrap">
         <p>Cada consulta tiene una historia singular.</p>
-        <a class="btn btn-primary" href="contacto.html">Solicitar una orientación inicial gratuita</a>
+        <a class="btn btn-primary" href="agenda.html?desde=portada">Reservar una hora</a>
       </div>
     </section>
 
@@ -145,14 +236,16 @@
         <a href="privacidad.html">Privacidad</a>
       </div>
       <div>
-        <a href="mailto:contacto@psiconexsoc.com">contacto@psiconexsoc.com</a>
+        <a href="tel:+56981216395">+56 9 8121 6395</a>
         <a href="https://linktr.ee/psiconexsoc">Instagram y redes</a>
         <p>Este sitio no sustituye servicios de urgencia. Ante riesgo vital, acude a un servicio de urgencias.</p>
       </div>
     </div>
   </footer>
   <script src="js/site.js?v=20260904"></script>
+  <script src="js/metricas.js?v=20260907"></script>
   <script src="js/nav.js?v=20260904"></script>
   <script src="js/consigna.js?v=20260904"></script>
+  <script src="js/grafo.js?v=20260908c"></script>
 </body>
 </html>

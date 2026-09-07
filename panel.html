@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tu espacio — PSICONEXSOC</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="assets/isotipo.svg">
+  <link rel="stylesheet" href="css/main.css?v=20260907">
+</head>
+<body class="regime-reading">
+  <a class="skip" href="#contenido">Ir al contenido</a>
+  <header class="site-header">
+    <div class="wrap header-bar">
+      <a class="brand" href="index.html">
+        <img src="assets/isotipo.svg" alt="">
+        <span class="brand-name">PSICONEXSOC</span>
+      </a>
+      <nav class="nav-desktop" aria-label="Principal">
+        <a href="clinica.html">Clínica</a>
+        <a href="agenda.html">Reservar</a>
+        <a href="panel.html" aria-current="page">Tu espacio</a>
+      </nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="menu-movil">Más</button>
+    </div>
+    <div class="nav-panel" id="menu-movil" data-nav-panel hidden>
+      <div class="wrap">
+        <div class="nav-group">
+          <a href="agenda.html">Reservar</a>
+          <a href="panel.html" aria-current="page">Tu espacio</a>
+          <button type="button" class="btn btn-ghost" data-salir>Salir</button>
+        </div>
+      </div>
+    </div>
+  </header>
+  <main id="contenido" data-panel>
+    <section class="dossier">
+      <div class="wrap">
+        <div class="dossier-head">
+          <h1 data-panel-nombre> </h1>
+          <div class="actions" style="margin:0">
+            <a class="btn btn-ghost" href="#bloques">Reservar</a>
+            <button class="btn btn-ghost" type="button" data-salir>Salir</button>
+          </div>
+        </div>
+
+        <div class="dossier-top">
+          <div>
+            <div data-proxima>
+              <p class="note">Próxima hora</p>
+              <p class="proxima-fecha" data-proxima-fecha></p>
+              <p class="note" data-proxima-meta></p>
+              <div class="actions">
+                <button class="btn btn-primary" type="button" data-reagendar>Reagendar</button>
+                <p class="note" data-reagendar-nota hidden>Este mes ya se usaron los dos reagendamientos.</p>
+              </div>
+            </div>
+            <div data-proxima-vacio hidden>
+              <p class="proxima-fecha">No hay una hora tomada.</p>
+              <div class="actions">
+                <a class="btn btn-primary" href="#bloques">Reservar una hora</a>
+              </div>
+            </div>
+          </div>
+          <div class="cifras">
+            <div>
+              <p class="note">Saldo</p>
+              <p class="cifra-num" data-saldo>—</p>
+              <p data-saldo-estado></p>
+            </div>
+            <div>
+              <p class="note">Reagendamientos</p>
+              <p class="cifra-num" data-reagendos>— / 2</p>
+              <p data-reagendos-mes></p>
+            </div>
+          </div>
+        </div>
+
+        <p class="form-status" data-panel-status role="status" aria-live="polite"></p>
+
+        <section class="section" id="bloques" data-bloques>
+          <h2>Horas disponibles</h2>
+          <ul class="serie" data-bloques-lista></ul>
+          <div class="actions">
+            <button class="btn btn-ghost" type="button" data-pagar>Cubrir una hora</button>
+          </div>
+        </section>
+
+        <section class="section">
+          <h2>Próximas</h2>
+          <ul class="serie" data-serie-proximas></ul>
+          <h2>Anteriores</h2>
+          <ul class="serie" data-serie-anteriores></ul>
+        </section>
+
+        <section class="section">
+          <h2>Pagos</h2>
+          <ul class="serie" data-pagos></ul>
+          <details>
+            <summary>Ver el libro</summary>
+            <ul class="serie" data-libro></ul>
+          </details>
+        </section>
+
+        <form class="form" data-canje>
+          <label>Código <input name="codigo" type="text" autocomplete="off" spellcheck="false"></label>
+          <button class="btn btn-ghost" type="submit">Canjear</button>
+        </form>
+
+        <section class="section">
+          <div class="prose">
+            <h2>El marco</h2>
+            <p>Honorario de referencia: <span data-honorario></span>. Hasta dos reagendamientos por mes calendario. Después, la hora tomada se cobra aunque no se asista. Este espacio no sustituye un servicio de urgencias. Teléfono: <a href="tel:+56981216395">+56 9 8121 6395</a>.</p>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <div class="wrap footer-grid">
+      <div>
+        <div class="footer-brand">PSICONEXSOC</div>
+        <p><em>La palabra tiene efectos.</em></p>
+      </div>
+      <div>
+        <a href="clinica.html">Clínica</a>
+        <a href="privacidad.html">Privacidad</a>
+      </div>
+      <div>
+        <a href="tel:+56981216395">+56 9 8121 6395</a>
+      </div>
+    </div>
+  </footer>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/site.js?v=20260907"></script>
+  <script src="js/metricas.js?v=20260907"></script>
+  <script src="js/nav.js?v=20260907"></script>
+  <script src="js/cuenta.js?v=20260907"></script>
+</body>
+</html>

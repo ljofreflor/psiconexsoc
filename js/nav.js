@@ -30,23 +30,31 @@
   if (!form) return;
 
   var status = form.querySelector("[data-form-status]");
+  var cfg = window.PSICONEXSOC || {};
+  var phone = cfg.telefonoTexto || "+56 9 8121 6395";
+  var tel = cfg.telefono || "56981216395";
 
-  function mailtoFallback(name, email, modality, reason) {
-    var body = [
-      "Nombre: " + name,
-      "Correo: " + email,
-      "Modalidad: " + modality,
-      "",
-      "Motivo:",
-      reason
-    ].join("\n");
-    window.location.href =
-      "mailto:contacto@psiconexsoc.com?subject=" +
-      encodeURIComponent("Orientación inicial — " + name) +
-      "&body=" +
-      encodeURIComponent(body);
-    status.textContent =
-      "Si no se abre el envío, escribe a contacto@psiconexsoc.com. Este sitio no guarda la ficha.";
+  function setStatus(text) {
+    if (!status) return;
+    status.textContent = text;
+  }
+
+  function copyPhone() {
+    var text = phone;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () {
+        setStatus("Teléfono copiado: " + text);
+      }).catch(function () {
+        setStatus("Llama al " + text);
+      });
+      return;
+    }
+    setStatus("Llama al " + text);
+  }
+
+  var copyBtn = document.querySelector("[data-copy-phone]");
+  if (copyBtn) {
+    copyBtn.addEventListener("click", copyPhone);
   }
 
   form.addEventListener("submit", function (event) {
@@ -57,45 +65,38 @@
     var reason = (form.querySelector('[name="motivo"]') || {}).value || "";
     var consent = form.querySelector('[name="consentimiento"]');
     if (consent && !consent.checked) {
-      status.textContent = "Necesitamos tu consentimiento para enviar la solicitud.";
+      setStatus("Necesitamos tu consentimiento para enviar la solicitud.");
       return;
     }
 
-    status.textContent = "Enviando…";
+    setStatus("Enviando…");
+    if (window.PSICONEXSOC && window.PSICONEXSOC.medir) {
+      window.PSICONEXSOC.medir("Formulario");
+    }
 
-    fetch("https://formsubmit.co/ajax/contacto@psiconexsoc.com", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json"
-      },
-      body: JSON.stringify({
-        nombre: name,
-        correo: email,
-        modalidad: modality,
-        motivo: reason,
-        _subject: "Orientación inicial — " + name,
-        _template: "box",
-        _captcha: "false"
-      })
-    })
-      .then(function (response) {
-        return response.json().then(function (data) {
-          return { ok: response.ok, data: data };
-        });
-      })
-      .then(function (result) {
-        if (result.ok) {
-          form.reset();
-          status.textContent =
-            "Solicitud enviada a contacto@psiconexsoc.com. Te responderemos por correo. Este sitio no guarda la ficha.";
-          return;
-        }
-        mailtoFallback(name, email, modality, reason);
-      })
-      .catch(function () {
-        mailtoFallback(name, email, modality, reason);
-      });
+    if (!cfg.supabaseUrl || !cfg.supabaseAnonKey || !window.supabase) {
+      setStatus("El formulario aún no tiene destino. Llama al " + phone + " o reserva desde la cuenta.");
+      return;
+    }
+
+    var db = window.supabase.createClient(cfg.supabaseUrl, cfg.supabaseAnonKey);
+    db.rpc("enviar_solicitud", {
+      p_nombre: name,
+      p_correo: email,
+      p_modalidad: modality,
+      p_motivo: reason
+    }).then(function (result) {
+      if (result.error) {
+        setStatus("No se pudo enviar. Llama al " + phone + ".");
+        copyPhone();
+        return;
+      }
+      form.reset();
+      setStatus("Solicitud recibida. Te responderemos; el teléfono sigue siendo " + phone + ".");
+    }).catch(function () {
+      setStatus("No se pudo enviar. Llama al " + phone + ".");
+      copyPhone();
+    });
   });
 })();
 

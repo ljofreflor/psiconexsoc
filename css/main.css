@@ -367,6 +367,7 @@ textarea:focus-visible {
   justify-content: center;
   padding: var(--space-4) var(--space-5);
   border: 1px solid currentColor;
+  font-family: var(--sans);
   font-size: 0.88rem;
   font-weight: 500;
   transition: filter 80ms linear;
@@ -374,6 +375,10 @@ textarea:focus-visible {
 
 .btn:hover {
   filter: brightness(1.04);
+}
+
+.hero .actions {
+  margin-top: var(--space-5);
 }
 
 .hero-listen {
@@ -475,6 +480,282 @@ textarea:focus-visible {
 
 .strip a:hover {
   color: var(--paper);
+}
+
+.grafo {
+  --p1: 0;
+  --p2: 0;
+  --p3: 0;
+  /* Un solo recorrido monótono manda sobre tres cosas: el dibujo, la presencia
+     y el color. --revelado es ese recorrido. */
+  --revelado: 0;
+  --n1: 0;
+  --n2: 0;
+  --n3: 0;
+  --n4: 0;
+  --aura-o: 0;
+  --aura-x: 0%;
+  --aura-y: 0%;
+  --aura-s: 1;
+
+  /* La misma tiza escribe los matemas y después dibuja al que los escribía. Las
+     tizas de color no se retiran: se cargan de polvo y convergen hacia la tiza
+     blanca. Nunca pasan por el gris, que es lo que las volvería fotografía. */
+  --tiza: var(--paper);
+  --tiza-fria: color-mix(in oklab, var(--cyan), var(--paper) calc(var(--revelado) * 64%));
+  --tiza-calida: color-mix(in oklab, var(--orange), var(--paper) calc(var(--revelado) * 54%));
+  /* La presión: el trazo engorda a medida que la mano se afirma. */
+  --presion: calc(2.8 + var(--revelado) * 1.4);
+
+  position: relative;
+  height: 280svh;
+  border-bottom: 1px solid var(--line);
+}
+
+.grafo-titulo {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.grafo-aura,
+.grafo-velo,
+.grafo-luz,
+.grafo-polvo,
+.grafo-pizarra {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* Pizarra de seminario: no es negro puro. Hay polvo, borraduras, una lámpara. */
+.grafo-pizarra {
+  background:
+    radial-gradient(70% 55% at 50% 38%, #2c3226 0%, transparent 72%),
+    radial-gradient(28% 18% at 32% 58%, rgb(244 241 234 / 0.05), transparent 70%),
+    radial-gradient(22% 14% at 68% 48%, rgb(244 241 234 / 0.035), transparent 70%),
+    repeating-linear-gradient(88deg, transparent 0 46px, rgb(255 255 255 / 0.012) 47px),
+    #14160f;
+}
+
+.grafo-lienzo {
+  position: sticky;
+  top: var(--header);
+  height: calc(100svh - var(--header));
+  overflow: hidden;
+  isolation: isolate;
+  display: grid;
+  place-items: center;
+  background: #14160f;
+}
+
+.grafo-defs {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+/* La presencia. No acumula: aparece y se retira con el scroll. */
+.grafo-aura {
+  display: grid;
+  place-items: center;
+  opacity: var(--aura-o);
+  transform: translate3d(var(--aura-x), var(--aura-y), 0) scale(var(--aura-s));
+  mix-blend-mode: screen;
+  will-change: opacity, transform;
+}
+
+/* El retrato no es una imagen encima del grafo: es la misma tiza, y se dibuja con
+   la misma gramática. Aura, no protagonista: cabe holgado dentro del anzuelo. */
+.grafo-retrato {
+  width: auto;
+  height: 78%;
+  max-width: 42%;
+  animation: aura-respira 11s ease-in-out infinite;
+}
+
+.grafo-retrato path {
+  fill: none;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  filter: url(#tiza);
+}
+
+/* El contorno viene de potrace, normalizado a 1, y se escribe de un tirón igual
+   que un matema. Es literalmente la misma regla. */
+.grafo-retrato [data-tipo="contorno"] path {
+  stroke: var(--tiza);
+  stroke-width: 2.6;
+  stroke-dasharray: 1;
+  stroke-dashoffset: calc(1 - var(--n1));
+}
+
+/* Aquí está el paso de trazo a relleno, y no hay salto porque no hay cambio de
+   técnica: el relleno es una trama de rayas de tiza, y una raya se escribe con
+   stroke-dashoffset igual que el contorno. Cada raya tiene su turno en --in, así
+   que la trama barre como una mano que raya, en vez de aparecer entera.
+   Las rayas no llevan pathLength: son cortas y parejas, y 300 basta para cubrir
+   la más larga, con lo que cada una se escribe dentro de su propia ventana. */
+.grafo-retrato [data-tipo="trama"] path {
+  --t: clamp(0, calc((var(--nivel, 0) - var(--in, 0)) * 7), 1);
+  stroke-width: 2.2;
+  stroke-dasharray: 300;
+  stroke-dashoffset: calc(300 * (1 - var(--t)));
+}
+
+/* Los niveles son presiones de tiza, no luminancias: trama abierta, trama
+   cerrada, y el repaso en cruz que asienta el volumen. */
+.grafo-retrato [data-nivel="2"] {
+  --nivel: var(--n2);
+  stroke: var(--tiza-fria);
+}
+
+.grafo-retrato [data-nivel="3"] {
+  --nivel: var(--n3);
+  stroke: var(--tiza);
+}
+
+.grafo-retrato [data-nivel="4"] {
+  --nivel: var(--n4);
+  stroke: var(--tiza-calida);
+}
+
+/* El polvo que suelta la tiza se acumula: el pizarrón se va cargando. */
+.grafo-polvo {
+  background:
+    radial-gradient(46% 38% at 50% 44%, color-mix(in oklab, var(--paper), transparent 88%), transparent 72%);
+  opacity: calc(var(--revelado) * 0.5);
+  mix-blend-mode: screen;
+}
+
+@keyframes aura-respira {
+  0%,
+  100% {
+    opacity: 0.68;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+/* El velo es polvo de pizarra, no un recuadro. */
+.grafo-velo {
+  background: radial-gradient(120% 78% at 50% 42%, rgb(20 22 15 / 0.15), rgb(8 9 6 / 0.72) 78%);
+}
+
+.grafo-luz {
+  background:
+    radial-gradient(38% 30% at calc(50% + var(--aura-x)) calc(46% + var(--aura-y)), rgb(77 184 255 / 0.16), transparent 70%),
+    radial-gradient(52% 40% at calc(50% - var(--aura-x)) calc(62% - var(--aura-y)), rgb(245 130 32 / 0.1), transparent 72%);
+  opacity: calc(0.25 + var(--aura-o));
+}
+
+/* El viewBox lleva la proporción; max-height la reduce sin deformarla. */
+.grafo-figura {
+  position: relative;
+  width: min(100%, 72rem);
+  height: auto;
+  aspect-ratio: 1000 / 720;
+  max-height: calc(100svh - var(--header) - 2.5rem);
+  padding: 0;
+  overflow: visible;
+}
+
+[data-estrato="1"] {
+  --t: var(--p1);
+  --trazo: var(--tiza-fria);
+}
+
+[data-estrato="2"] {
+  --t: var(--p2);
+  --trazo: var(--tiza-fria);
+}
+
+/* El piso del inconsciente cambia de registro, no de figura. */
+[data-estrato="3"] {
+  --t: var(--p3);
+  --trazo: var(--tiza-calida);
+}
+
+.grafo-figura [data-trazo] {
+  --local: clamp(0, calc((var(--t) - var(--in, 0)) / var(--span, 1)), 1);
+  fill: none;
+  stroke: var(--trazo);
+  stroke-width: var(--presion);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: calc(1 - var(--local));
+  filter: url(#tiza);
+}
+
+/* La letra se enciende cuando el trazo ya pasó por su sitio. El umbral nunca
+   sube de .88 para que la rampa alcance a completarse. */
+.grafo-punta {
+  fill: var(--trazo);
+  stroke: none;
+  opacity: clamp(0, calc((var(--t) - var(--in, 0)) * 12), 1);
+  filter: url(#tiza);
+}
+
+.grafo-punta-hueca {
+  fill: none;
+  stroke: var(--trazo);
+  stroke-width: calc(var(--presion) * 0.95);
+  stroke-linecap: butt;
+  stroke-linejoin: miter;
+}
+
+.grafo-nudo {
+  fill: none;
+  stroke: var(--tiza);
+  stroke-width: 1.8;
+  opacity: clamp(0, calc((var(--t) - var(--in, 0)) * 12), 1);
+  filter: url(#tiza);
+}
+
+.grafo-letra {
+  overflow: visible;
+  color: var(--trazo, var(--tiza));
+  fill: var(--trazo, var(--tiza));
+  opacity: clamp(0, calc((var(--t) - var(--in, 0)) * 12), 1);
+}
+
+.grafo-letra path {
+  fill: currentColor;
+  stroke: none;
+}
+
+.grafo-letra line {
+  fill: none;
+  stroke: currentColor;
+}
+
+.grafo-letra-menor {
+  fill: var(--trazo, var(--tiza));
+  font-family: var(--serif);
+  font-size: 22px;
+  font-style: italic;
+  opacity: clamp(0, calc((var(--t) - var(--in, 0)) * 12), 1);
+}
+
+.grafo-oido {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: var(--space-5);
+  margin: 0;
+  text-align: center;
+}
+
+.grafo-oido .listen {
+  color: var(--tiza);
 }
 
 .looks {
@@ -910,6 +1191,16 @@ textarea {
   color: var(--text-paper);
 }
 
+.reading-sheet .btn-ghost {
+  color: var(--text-ink);
+  border-color: color-mix(in srgb, var(--text-ink) calc(var(--alpha-line) * 140%), transparent);
+}
+
+.reading-sheet .btn-ghost:hover {
+  border-color: var(--orange);
+  color: var(--orange);
+}
+
 .regime-reading .site-header {
   background: rgb(243 241 236 / var(--alpha-header));
 }
@@ -1037,6 +1328,29 @@ textarea {
     gap: var(--space-3);
     font-size: 0.78rem;
   }
+
+  /* Una figura apaisada en pantalla vertical: el lienzo se acorta para que no
+     quede nadando en negro, y la letra crece en unidades del viewBox. */
+  .grafo {
+    height: 240svh;
+  }
+
+  .grafo-lienzo {
+    height: min(70svh, calc(100svh - var(--header)));
+  }
+
+  .grafo-figura {
+    padding: 0;
+    width: 96%;
+  }
+
+  .grafo-letra-menor {
+    font-size: 28px;
+  }
+
+  .grafo-figura [data-trazo] {
+    stroke-width: 4;
+  }
 }
 
 .object-meta {
@@ -1114,4 +1428,296 @@ textarea {
   .reading-bar {
     display: none;
   }
+
+  /* Sin movimiento: el grafo ya está entero y la presencia queda quieta. */
+  .grafo {
+    height: auto;
+  }
+
+  .grafo-lienzo {
+    position: static;
+    height: auto;
+    min-height: calc(100svh - var(--header));
+  }
+
+  .grafo-aura {
+    transform: none;
+  }
+
+  .grafo-retrato {
+    animation: none;
+    opacity: 1;
+  }
+
+  /* La figura entera y el color en su estado final: se ve el destino de la
+     secuencia sin tener que recorrerla. */
+  .grafo {
+    --p1: 1;
+    --p2: 1;
+    --p3: 1;
+    --revelado: 1;
+    --n1: 1;
+    --n2: 1;
+    --n3: 1;
+    --n4: 1;
+    --aura-o: 0.42;
+  }
+}
+
+input,
+select,
+textarea {
+  font-size: 1rem;
+}
+
+.check input {
+  width: 1.5rem;
+  height: 1.5rem;
+  min-width: 1.5rem;
+  min-height: 1.5rem;
+  flex: none;
+}
+
+.reading-sheet input,
+.reading-sheet select,
+.reading-sheet textarea,
+.regime-reading input,
+.regime-reading select,
+.regime-reading textarea {
+  color: var(--text-ink);
+  border-bottom-color: color-mix(in srgb, var(--text-ink) calc(var(--alpha-line) * 140%), transparent);
+}
+
+.reading-sheet .check,
+.regime-reading .check {
+  color: var(--text-ink);
+}
+
+.reading-sheet .form-status,
+.regime-reading .form-status {
+  color: var(--link-warm);
+}
+
+.dossier {
+  padding: var(--space-7) 0 var(--space-8);
+}
+
+.dossier-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-7);
+}
+
+.dossier-head h1 {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  letter-spacing: -0.03em;
+  margin: 0;
+}
+
+.dossier-grid {
+  display: grid;
+  gap: var(--space-6);
+}
+
+@media (min-width: 800px) {
+  .dossier-top {
+    display: grid;
+    grid-template-columns: 1.4fr 0.8fr;
+    gap: var(--space-6);
+    align-items: start;
+  }
+}
+
+.proxima-fecha {
+  font-family: var(--text);
+  font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+  line-height: 1.2;
+  margin: 0 0 var(--space-3);
+}
+
+.cifras {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-5);
+}
+
+.cifra-num {
+  font-family: var(--sans);
+  font-variant-numeric: tabular-nums;
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  margin: 0;
+}
+
+.serie {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.serie li {
+  display: grid;
+  gap: 0.2rem;
+  padding: var(--space-3) 0;
+  border-top: 1px solid var(--line);
+  font-family: var(--sans);
+}
+
+.serie li strong {
+  font-weight: 500;
+}
+
+.serie li span,
+.cifra-num + p {
+  color: var(--muted);
+  font-family: var(--sans);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.auth-stack {
+  display: grid;
+  gap: 12px;
+  max-width: 24rem;
+}
+
+.auth-stack .btn,
+.auth-plugin iframe,
+.auth-plugin > div {
+  width: 100%;
+}
+
+.auth-plugin {
+  min-height: 40px;
+}
+
+.btn-sso[hidden],
+.auth-plugin[hidden] {
+  display: none !important;
+}
+
+.btn-sso {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 100%;
+  height: 40px;
+  margin: 0;
+  padding: 0 12px 0 44px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.25px;
+  line-height: 20px;
+  text-align: center;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.btn-sso:disabled {
+  cursor: default;
+}
+
+.btn-sso-mark {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  display: flex;
+  width: 20px;
+  height: 20px;
+  transform: translateY(-50%);
+}
+
+.btn-sso-mark svg {
+  display: block;
+}
+
+.btn-sso-google {
+  background: #fff;
+  border: 1px solid #747775;
+  color: #1f1f1f;
+  font-family: Roboto, Arial, Helvetica, sans-serif;
+}
+
+.btn-sso-google:hover:not(:disabled) {
+  background: #f8f8f8;
+  box-shadow: 0 1px 2px rgba(60, 64, 67, 0.15);
+}
+
+.btn-sso-google:focus-visible {
+  outline: 2px solid #4285f4;
+  outline-offset: 2px;
+}
+
+.btn-sso-facebook {
+  background: #1877f2;
+  border: 1px solid #1877f2;
+  color: #fff;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+.btn-sso-facebook:hover:not(:disabled) {
+  background: #166fe5;
+  border-color: #166fe5;
+}
+
+.btn-sso-facebook:focus-visible {
+  outline: 2px solid #1877f2;
+  outline-offset: 2px;
+}
+
+.btn-sso-microsoft {
+  background: #fff;
+  border: 1px solid #8c8c8c;
+  color: #5e5e5e;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 15px;
+  letter-spacing: 0;
+}
+
+.btn-sso-microsoft:hover:not(:disabled) {
+  background: #f7f7f7;
+}
+
+.btn-sso-microsoft:focus-visible {
+  outline: 2px solid #6264a7;
+  outline-offset: 2px;
+}
+
+.btn-sso-apple {
+  background: #000;
+  border: 1px solid #000;
+  color: #fff;
+  font-family: -apple-system, "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 15px;
+  letter-spacing: 0;
+}
+
+.btn-sso-apple:hover:not(:disabled) {
+  background: #1a1a1a;
+}
+
+.btn-sso-apple:focus-visible {
+  outline: 2px solid #000;
+  outline-offset: 2px;
+}
+
+.salida-clinica {
+  margin-top: var(--space-6);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--line);
+}
+
+.equipo-admin .form {
+  margin-bottom: var(--space-7);
 }

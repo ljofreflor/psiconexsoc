@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Equipo — PSICONEXSOC</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" href="assets/isotipo.svg">
+  <link rel="stylesheet" href="css/main.css?v=20260907">
+</head>
+<body class="regime-reading">
+  <a class="skip" href="#contenido">Ir al contenido</a>
+  <header class="site-header">
+    <div class="wrap header-bar">
+      <a class="brand" href="index.html">
+        <img src="assets/isotipo.svg" alt="">
+        <span class="brand-name">PSICONEXSOC</span>
+      </a>
+      <button class="btn btn-ghost" type="button" data-salir>Salir</button>
+    </div>
+  </header>
+  <main id="contenido" class="dossier equipo-admin" data-equipo-admin>
+    <div class="wrap">
+      <div class="dossier-head">
+        <h1>Equipo</h1>
+      </div>
+      <p class="form-status" data-equipo-status role="status" aria-live="polite"></p>
+
+      <form class="form" data-honorario-form>
+        <h2>Honorario de referencia (CLP)</h2>
+        <label>Monto <input name="honorario" type="number" min="1" step="1" required></label>
+        <button class="btn btn-primary" type="submit">Guardar</button>
+      </form>
+
+      <form class="form" data-bloque-form>
+        <h2>Publicar un bloque</h2>
+        <label>Profesional
+          <select name="profesional">
+            <option>José Joaquín Valderrama</option>
+            <option>Vicente Molina Toro</option>
+            <option>Agustín Artigas Osorio</option>
+          </select>
+        </label>
+        <label>Inicio <input name="inicio" type="datetime-local" required></label>
+        <label>Fin <input name="fin" type="datetime-local" required></label>
+        <button class="btn btn-primary" type="submit">Publicar</button>
+      </form>
+
+      <form class="form" data-codigo-form>
+        <h2>Emitir un código</h2>
+        <label>Código <input name="codigo" type="text" required autocomplete="off"></label>
+        <label>Tipo
+          <select name="tipo">
+            <option value="invitacion">Invitación</option>
+            <option value="campana">Campaña</option>
+            <option value="giftcard">Gift card</option>
+          </select>
+        </label>
+        <label>Monto (CLP) <input name="monto" type="number" min="1" required></label>
+        <label>Usos máximos <input name="usos" type="number" min="1" value="1"></label>
+        <label>Vence <input name="vence" type="date"></label>
+        <label>Correo (si va atado) <input name="correo" type="email"></label>
+        <label>Campaña <input name="campana" type="text"></label>
+        <button class="btn btn-primary" type="submit">Emitir</button>
+      </form>
+
+      <form class="form" data-credito-form>
+        <h2>Cargar crédito</h2>
+        <label>Correo de la cuenta <input name="correo" type="email" required></label>
+        <label>Monto (positivo acredita) <input name="monto" type="number" required></label>
+        <label>Nota <input name="nota" type="text"></label>
+        <button class="btn btn-primary" type="submit">Cargar</button>
+      </form>
+
+      <form class="form" data-pago-form>
+        <h2>Registrar un pago</h2>
+        <label>Correo de la cuenta <input name="correo" type="email" required></label>
+        <label>Monto <input name="monto" type="number" min="1" required></label>
+        <label>Medio <input name="pasarela" type="text" value="transferencia"></label>
+        <button class="btn btn-primary" type="submit">Acreditar</button>
+      </form>
+    </div>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/site.js?v=20260907"></script>
+  <script src="js/metricas.js?v=20260907"></script>
+  <script src="js/nav.js?v=20260907"></script>
+  <script src="js/cuenta.js?v=20260907"></script>
+</body>
+</html>
