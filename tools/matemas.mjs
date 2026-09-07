@@ -54,11 +54,14 @@ function colocar(tex, { x, y, anchor = 'start', scale = EM, inn, rotate, slash, 
   const h = vh * scale;
   const x0 = anchor === 'end' ? x - w : anchor === 'middle' ? x - w / 2 : x;
   const y0 = y + vy * scale;
-  const rot = rotate ? ` transform="rotate(${rotate} ${x} ${y})"` : '';
+  const rot = rotate ? `rotate(${rotate} ${x} ${y}) ` : '';
+  const sx = w / vw;
+  const sy = h / vh;
+  // Grupo en el viewBox de 1000, no <svg> anidado: #tiza usa esas unidades.
   return (
-    `<svg class="grafo-letra" style="--in:${inn}" x="${x0.toFixed(1)}" y="${y0.toFixed(1)}"` +
-    ` width="${w.toFixed(1)}" height="${h.toFixed(1)}" viewBox="${viewBox}"` +
-    ` aria-hidden="true"${rot}>${inner}</svg>`
+    `<g class="grafo-letra" style="--in:${inn}"` +
+    ` transform="${rot}translate(${x0.toFixed(1)} ${y0.toFixed(1)}) scale(${sx.toFixed(6)} ${sy.toFixed(6)}) translate(${(-vx).toFixed(1)} ${(-vy).toFixed(1)})"` +
+    ` aria-hidden="true">${inner}</g>`
   );
 }
 

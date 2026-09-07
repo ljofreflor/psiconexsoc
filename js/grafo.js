@@ -44,8 +44,54 @@
     lienzo.style.setProperty(nombre, valor);
   }
 
+  function sala() {
+    var teatro = lienzo.querySelector(".grafo-lienzo");
+    if (!teatro) return;
+    var t = teatro.getBoundingClientRect();
+    document.documentElement.classList.toggle("sobre-grafo", t.top <= 1 && t.bottom > 96);
+  }
+
+  // #tiza en el mismo path que anima el dashoffset congela la mano: el filtro
+  // cachea el primer fotograma. El grano va en un grupo; el dash, en atributo.
+  function envolverTiza() {
+    var estratos = lienzo.querySelectorAll("[data-estrato]");
+    for (var i = 0; i < estratos.length; i++) {
+      if (estratos[i].querySelector(".grafo-tiza")) continue;
+      var caja = document.createElementNS("http://www.w3.org/2000/svg", "g");
+      caja.setAttribute("class", "grafo-tiza");
+      var hijos = Array.prototype.slice.call(estratos[i].children);
+      var primero = null;
+      for (var k = 0; k < hijos.length; k++) {
+        var n = hijos[k];
+        var cls = n.getAttribute("class") || "";
+        if (!n.hasAttribute("data-trazo") && cls.indexOf("grafo-punta") < 0 && cls.indexOf("grafo-nudo") < 0) {
+          continue;
+        }
+        if (!primero) {
+          estratos[i].insertBefore(caja, n);
+          primero = n;
+        }
+        caja.appendChild(n);
+      }
+    }
+  }
+
+  function escribir() {
+    var paths = lienzo.querySelectorAll("[data-trazo]");
+    for (var i = 0; i < paths.length; i++) {
+      var el = paths[i];
+      var piso = el.closest("[data-estrato]");
+      var p = piso ? trazo[(piso.getAttribute("data-estrato") | 0) - 1] : 0;
+      var ini = parseFloat(el.style.getPropertyValue("--in") || "0");
+      var span = parseFloat(el.style.getPropertyValue("--span") || "1");
+      if (!el.hasAttribute("stroke-dasharray")) el.setAttribute("stroke-dasharray", "1");
+      el.setAttribute("stroke-dashoffset", (1 - acotar((p - ini) / span)).toFixed(4));
+    }
+  }
+
   function pintar() {
     pedido = false;
+    sala();
     var recorrido = lienzo.offsetHeight - window.innerHeight;
     if (recorrido <= 0) return;
     var crudo = acotar(-lienzo.getBoundingClientRect().top / recorrido);
@@ -60,6 +106,7 @@
       if (p > trazo[i]) trazo[i] = p;
       poner("--p" + (i + 1), trazo[i].toFixed(4));
     }
+    escribir();
 
     for (var n = 0; n < NIVELES.length; n++) {
       var franja = NIVELES[n];
@@ -106,6 +153,10 @@
   }
 
   function figuraEntera() {
+    trazo[0] = 1;
+    trazo[1] = 1;
+    trazo[2] = 1;
+    revelado = 1;
     poner("--p1", "1");
     poner("--p2", "1");
     poner("--p3", "1");
@@ -118,6 +169,8 @@
     poner("--aura-x", "0%");
     poner("--aura-y", "0%");
     poner("--aura-s", "1");
+    escribir();
+    sala();
   }
 
   function seguirElScroll() {
@@ -145,6 +198,7 @@
   } else if (quieto.addListener) {
     quieto.addListener(ajustar);
   }
+  envolverTiza();
   ajustar();
 
   // El trazado de Lacan entra como trazo, no como imagen. Si no hay archivo de

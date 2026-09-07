@@ -56,18 +56,18 @@
 
 :root {
   --black: #000000;
-  --ink: #0a0a0a;
-  --paper: #f4f1ea;
-  --muted: #9a958c;
-  --orange: #f58220;
-  --cyan: #4db8ff;
-  --on-orange: #111111;
-  --on-cyan: #081018;
-  --text-ink: #2c2a26;
-  --text-paper: #f3f1ec;
-  --text-night: #121212;
-  --text-on-night: #d8d4cc;
-  --link-warm: #b85a10;
+  --ink: #1a1a1a;
+  --paper: #ededed;
+  --muted: #929292;
+  --orange: #eb6608;
+  --cyan: #426f8e;
+  --on-orange: #000000;
+  --on-cyan: #ffffff;
+  --text-ink: #1a1a1a;
+  --text-paper: #ededed;
+  --text-night: #1a1a1a;
+  --text-on-night: #b7b7b7;
+  --link-warm: #5b442b;
   --sans: Inter, "Helvetica Neue", Helvetica, Arial, sans-serif;
   --serif: "Instrument Serif", "Times New Roman", Times, serif;
   --text: "Playfair Display", "Times New Roman", Times, serif;
@@ -83,8 +83,10 @@
   --gutter: var(--space-6);
   --measure: 65ch;
   --quote-inset: var(--space-6);
+  /* Canto de la cita: 10 px. No se redondea, no se alinea al módulo 8. */
   --quote-stroke: 10px;
   --alpha-header: 0.94;
+  /* Un solo grano de sitio. No se sube. No se duplica. */
   --alpha-grain: 0.05;
   --alpha-line: 0.16;
   --line: rgb(255 255 255 / var(--alpha-line));
@@ -144,6 +146,7 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* Diente de la pantalla, no vintage. Este es el único feTurbulence. */
 body::after {
   content: "";
   position: fixed;
@@ -225,6 +228,18 @@ h3 {
   z-index: 40;
   background: rgb(0 0 0 / var(--alpha-header));
   border-bottom: 1px solid var(--line);
+  box-shadow: none;
+}
+
+/* En el teatro la pizarra es el campo: el cromo no la corta. */
+html.sobre-grafo .site-header {
+  background: transparent;
+  border-bottom-color: transparent;
+}
+
+html.sobre-grafo body.nav-open .site-header {
+  background: rgb(0 0 0 / var(--alpha-header));
+  border-bottom-color: var(--line);
 }
 
 .header-bar {
@@ -329,17 +344,47 @@ textarea:focus-visible {
   font-size: 1.15rem;
 }
 
+/* Campo naranja: convocatoria clínica. No es un fondo de archivo. */
 .hero {
+  position: relative;
+  isolation: isolate;
   min-height: calc(100svh - var(--header));
   display: grid;
   align-content: end;
   padding: var(--space-7) 0 var(--space-8);
   background: var(--orange);
   color: var(--on-orange);
+  overflow: hidden;
 }
 
 .hero a:not(.btn) {
   color: inherit;
+}
+
+/* Cinta ASCII detrás del campo, no del botón. */
+.clase-ascii {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  pointer-events: none;
+  user-select: none;
+  opacity: 0.86;
+}
+
+.hero > :not(.clase-ascii),
+.look-clinic > :not(.clase-ascii),
+.shop-card.orange > :not(.clase-ascii) {
+  position: relative;
+  z-index: 1;
+}
+
+.regime-reading .clase-ascii {
+  display: none;
 }
 
 .hero-kicker {
@@ -367,12 +412,15 @@ textarea:focus-visible {
   justify-content: center;
   padding: var(--space-4) var(--space-5);
   border: 1px solid currentColor;
+  border-radius: 0;
   font-family: var(--sans);
   font-size: 0.88rem;
   font-weight: 500;
+  box-shadow: none;
   transition: filter 80ms linear;
 }
 
+/* Un solo hover del sistema: no elevate, no glow, no sombra. */
 .btn:hover {
   filter: brightness(1.04);
 }
@@ -498,17 +546,16 @@ textarea:focus-visible {
   --aura-y: 0%;
   --aura-s: 1;
 
-  /* La misma tiza escribe los matemas y después dibuja al que los escribía. Las
-     tizas de color no se retiran: se cargan de polvo y convergen hacia la tiza
-     blanca. Nunca pasan por el gris, que es lo que las volvería fotografía. */
+  /* Tiza sobre el negro del sistema: un soplo frío o cálido, no marca a campo. */
   --tiza: var(--paper);
-  --tiza-fria: color-mix(in oklab, var(--cyan), var(--paper) calc(var(--revelado) * 64%));
-  --tiza-calida: color-mix(in oklab, var(--orange), var(--paper) calc(var(--revelado) * 54%));
+  --tiza-fria: color-mix(in oklab, var(--paper), var(--cyan) calc(12% - var(--revelado) * 5%));
+  --tiza-calida: color-mix(in oklab, var(--paper), var(--orange) calc(14% - var(--revelado) * 5%));
   /* La presión: el trazo engorda a medida que la mano se afirma. */
-  --presion: calc(2.8 + var(--revelado) * 1.4);
+  --presion: calc(4.8 + var(--revelado) * 1.2);
 
   position: relative;
   height: 280svh;
+  background: var(--ink);
   border-bottom: 1px solid var(--line);
 }
 
@@ -526,31 +573,45 @@ textarea:focus-visible {
 .grafo-velo,
 .grafo-luz,
 .grafo-polvo,
+.grafo-borrones,
 .grafo-pizarra {
   position: absolute;
   inset: 0;
   pointer-events: none;
 }
 
-/* Pizarra de seminario: no es negro puro. Hay polvo, borraduras, una lámpara. */
+/* El campo es pizarra, a campo lleno. No un recuadro con marco. */
 .grafo-pizarra {
   background:
-    radial-gradient(70% 55% at 50% 38%, #2c3226 0%, transparent 72%),
-    radial-gradient(28% 18% at 32% 58%, rgb(244 241 234 / 0.05), transparent 70%),
-    radial-gradient(22% 14% at 68% 48%, rgb(244 241 234 / 0.035), transparent 70%),
-    repeating-linear-gradient(88deg, transparent 0 46px, rgb(255 255 255 / 0.012) 47px),
-    #14160f;
+    linear-gradient(181deg, transparent 16%, color-mix(in srgb, var(--paper) 6%, transparent) 21%, transparent 27%),
+    linear-gradient(178deg, transparent 51%, color-mix(in srgb, var(--paper) 4%, transparent) 57%, transparent 64%),
+    radial-gradient(140% 22% at 50% 0%, color-mix(in srgb, var(--paper) 8%, transparent), transparent 62%),
+    radial-gradient(38% 20% at 28% 42%, color-mix(in srgb, var(--black) 55%, var(--ink)), transparent 72%),
+    radial-gradient(30% 18% at 68% 48%, color-mix(in srgb, var(--black) 40%, var(--ink)), transparent 70%),
+    var(--ink);
 }
 
+/* Óvalos del fieltro: otra clase, no un cuarto ruido. */
+.grafo-borrones {
+  background:
+    radial-gradient(38% 22% at 20% 70%, color-mix(in srgb, var(--paper) 18%, transparent), transparent 74%),
+    radial-gradient(28% 18% at 76% 30%, color-mix(in srgb, var(--paper) 14%, transparent), transparent 72%),
+    radial-gradient(22% 30% at 56% 80%, color-mix(in srgb, var(--paper) 10%, transparent), transparent 74%),
+    radial-gradient(26% 16% at 10% 24%, color-mix(in srgb, var(--paper) 8%, transparent), transparent 70%),
+    radial-gradient(18% 14% at 88% 58%, color-mix(in srgb, var(--paper) 7%, transparent), transparent 68%);
+}
+
+/* El lienzo es el teatro: sticky a campo lleno para que el scroll escriba.
+   top: 0 — la pizarra pasa bajo el header, no queda un panel recortado. */
 .grafo-lienzo {
   position: sticky;
-  top: var(--header);
-  height: calc(100svh - var(--header));
+  top: 0;
+  height: 100svh;
   overflow: hidden;
   isolation: isolate;
   display: grid;
   place-items: center;
-  background: #14160f;
+  padding-top: var(--header);
 }
 
 .grafo-defs {
@@ -625,11 +686,14 @@ textarea:focus-visible {
   stroke: var(--tiza-calida);
 }
 
-/* El polvo que suelta la tiza se acumula: el pizarrón se va cargando. */
+/* El polvo cae y se acumula abajo. */
 .grafo-polvo {
   background:
-    radial-gradient(46% 38% at 50% 44%, color-mix(in oklab, var(--paper), transparent 88%), transparent 72%);
-  opacity: calc(var(--revelado) * 0.5);
+    radial-gradient(90% 32% at 50% 100%, color-mix(in srgb, var(--paper) 20%, transparent), transparent 76%),
+    radial-gradient(36% 18% at 28% 96%, color-mix(in srgb, var(--paper) 9%, transparent), transparent 70%),
+    radial-gradient(32% 16% at 74% 97%, color-mix(in srgb, var(--paper) 7%, transparent), transparent 68%),
+    radial-gradient(50% 40% at 50% 44%, color-mix(in srgb, var(--paper) 12%, transparent), transparent 72%);
+  opacity: calc(0.28 + var(--revelado) * 0.5);
   mix-blend-mode: screen;
 }
 
@@ -644,27 +708,37 @@ textarea:focus-visible {
   }
 }
 
-/* El velo es polvo de pizarra, no un recuadro. */
+/* El velo es la sala, no un recuadro que come el trazo. */
 .grafo-velo {
-  background: radial-gradient(120% 78% at 50% 42%, rgb(20 22 15 / 0.15), rgb(8 9 6 / 0.72) 78%);
+  background: radial-gradient(86% 64% at 50% 38%, transparent 36%, rgb(0 0 0 / 0.5) 100%);
 }
 
+/* Lámpara de aula, no un brillo de marca. */
 .grafo-luz {
   background:
-    radial-gradient(38% 30% at calc(50% + var(--aura-x)) calc(46% + var(--aura-y)), rgb(77 184 255 / 0.16), transparent 70%),
-    radial-gradient(52% 40% at calc(50% - var(--aura-x)) calc(62% - var(--aura-y)), rgb(245 130 32 / 0.1), transparent 72%);
-  opacity: calc(0.25 + var(--aura-o));
+    radial-gradient(130% 22% at 50% 0%, color-mix(in srgb, var(--paper) 12%, transparent), transparent 72%),
+    radial-gradient(36% 28% at calc(50% + var(--aura-x)) calc(44% + var(--aura-y)), color-mix(in srgb, var(--paper) 5%, transparent), transparent 70%);
+  opacity: calc(0.5 + var(--aura-o) * 0.28);
 }
 
 /* El viewBox lleva la proporción; max-height la reduce sin deformarla. */
 .grafo-figura {
   position: relative;
-  width: min(100%, 72rem);
+  width: min(96%, 74rem);
   height: auto;
   aspect-ratio: 1000 / 720;
-  max-height: calc(100svh - var(--header) - 2.5rem);
+  max-height: calc(100svh - var(--header) - 2.6rem);
   padding: 0;
   overflow: visible;
+}
+
+/* El grano cuelga del grupo, no del path: si #tiza vive en el mismo
+   [data-trazo] que el dashoffset, el filtro cachea el primer fotograma
+   y el scroll deja de escribir. --revelado mueve el grupo para que
+   Safari vuelva a componer. */
+.grafo-tiza {
+  filter: url(#tiza);
+  transform: translate3d(0, 0, calc(var(--revelado) * 0.02px));
 }
 
 [data-estrato="1"] {
@@ -690,9 +764,6 @@ textarea:focus-visible {
   stroke-width: var(--presion);
   stroke-linecap: round;
   stroke-linejoin: round;
-  stroke-dasharray: 1;
-  stroke-dashoffset: calc(1 - var(--local));
-  filter: url(#tiza);
 }
 
 /* La letra se enciende cuando el trazo ya pasó por su sitio. El umbral nunca
@@ -701,7 +772,6 @@ textarea:focus-visible {
   fill: var(--trazo);
   stroke: none;
   opacity: clamp(0, calc((var(--t) - var(--in, 0)) * 12), 1);
-  filter: url(#tiza);
 }
 
 .grafo-punta-hueca {
@@ -715,11 +785,11 @@ textarea:focus-visible {
 .grafo-nudo {
   fill: none;
   stroke: var(--tiza);
-  stroke-width: 1.8;
+  stroke-width: 2.3;
   opacity: clamp(0, calc((var(--t) - var(--in, 0)) * 12), 1);
-  filter: url(#tiza);
 }
 
+/* #tiza cuelga de .grafo-mano: una mano, el viewBox de 1000. */
 .grafo-letra {
   overflow: visible;
   color: var(--trazo, var(--tiza));
@@ -729,7 +799,9 @@ textarea:focus-visible {
 
 .grafo-letra path {
   fill: currentColor;
-  stroke: none;
+  stroke: var(--ink);
+  stroke-width: 220;
+  paint-order: stroke fill;
 }
 
 .grafo-letra line {
@@ -739,8 +811,11 @@ textarea:focus-visible {
 
 .grafo-letra-menor {
   fill: var(--trazo, var(--tiza));
+  stroke: var(--ink);
+  stroke-width: 12;
+  paint-order: stroke fill;
   font-family: var(--serif);
-  font-size: 22px;
+  font-size: 34px;
   font-style: italic;
   opacity: clamp(0, calc((var(--t) - var(--in, 0)) * 12), 1);
 }
@@ -749,7 +824,7 @@ textarea:focus-visible {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: var(--space-5);
+  bottom: var(--space-3);
   margin: 0;
   text-align: center;
 }
@@ -769,7 +844,9 @@ textarea:focus-visible {
   flex-direction: column;
   justify-content: flex-end;
   border-bottom: 1px solid var(--line);
+  border-radius: 0;
   color: var(--paper);
+  box-shadow: none;
   transition: filter 80ms linear;
 }
 
@@ -792,7 +869,11 @@ textarea:focus-visible {
   color: var(--muted);
 }
 
+/* Naranja a campo: clínica que llama. Solo en campaña. */
 .look-clinic {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   background: var(--orange);
   color: var(--on-orange);
   min-height: 48vh;
@@ -864,10 +945,15 @@ textarea:focus-visible {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
+  border-radius: 0;
+  box-shadow: none;
   transition: filter 80ms linear;
 }
 
 .shop-card.orange {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   background: var(--orange);
   color: var(--on-orange);
 }
@@ -930,6 +1016,8 @@ textarea:focus-visible {
 .area-block {
   background: var(--surface);
   padding: var(--space-5);
+  border-radius: 0;
+  box-shadow: none;
 }
 
 .member h3,
@@ -1046,6 +1134,7 @@ textarea {
   padding: var(--space-7) 0 var(--space-6);
   color: var(--muted);
   font-size: 0.85rem;
+  box-shadow: none;
 }
 
 .footer-grid {
@@ -1146,9 +1235,10 @@ textarea {
 .hero-lede {
   max-width: 36rem;
   margin: 0;
-  color: #1a1208;
+  color: var(--on-orange);
 }
 
+/* Papel e tinta: archivo. No es un modo oscuro invertido. */
 .reading-sheet,
 .regime-reading {
   --line: color-mix(in srgb, var(--text-ink) calc(var(--alpha-line) * 100%), transparent);
@@ -1252,6 +1342,7 @@ textarea {
   margin-top: var(--space-6);
 }
 
+/* Pieza, no página: papel o noche. Las escuadras son el canto, no una sombra. */
 .quote {
   position: relative;
   width: 100%;
@@ -1268,6 +1359,8 @@ textarea {
   font-family: var(--text);
   font-size: clamp(0.88rem, 1.8vw, 1.1rem);
   line-height: 1.45;
+  border-radius: 0;
+  box-shadow: none;
 }
 
 .quote::before,
@@ -1337,7 +1430,9 @@ textarea {
   }
 
   .grafo-lienzo {
+    top: var(--header);
     height: min(70svh, calc(100svh - var(--header)));
+    padding-top: 0;
   }
 
   .grafo-figura {
@@ -1346,7 +1441,11 @@ textarea {
   }
 
   .grafo-letra-menor {
-    font-size: 28px;
+    font-size: 38px;
+  }
+
+  .grafo-oido {
+    bottom: var(--space-2);
   }
 
   .grafo-figura [data-trazo] {
@@ -1640,6 +1739,7 @@ textarea {
   display: block;
 }
 
+/* Isla de proveedor: radio 4px, Roboto y esta sombra no se heredan. */
 .btn-sso-google {
   background: #fff;
   border: 1px solid #747775;
@@ -1782,4 +1882,40 @@ body.captura-cita .quote {
 
 .equipo-admin .form {
   margin-bottom: var(--space-7);
+}
+
+/* Guardas de régimen. El material infiere el contenido.
+   docs/07-spec-visual.md — no mezclar campos; no un cuarto material. */
+
+.regime-campaign {
+  background: var(--black);
+  color: var(--paper);
+}
+
+.regime-reading .nav-desktop,
+.regime-reading .nav-group a,
+.regime-reading .brand-name,
+.regime-campaign .nav-desktop,
+.regime-campaign .nav-group a,
+.regime-campaign .brand-name {
+  font-family: var(--sans);
+}
+
+.regime-reading .hero,
+.regime-reading .look-clinic,
+.regime-reading .shop-card.orange {
+  background: var(--text-paper);
+  color: var(--text-ink);
+}
+
+.regime-reading .hero .hero-kicker,
+.regime-reading .hero .hero-lede,
+.regime-reading .hero .hero-title,
+.regime-reading .look-clinic em {
+  color: inherit;
+}
+
+.regime-reading .prose p,
+.regime-reading .prose li {
+  font-family: var(--text);
 }
