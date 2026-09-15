@@ -546,10 +546,11 @@ textarea:focus-visible {
   --aura-y: 0%;
   --aura-s: 1;
 
-  /* Tiza sobre el negro del sistema: un soplo frío o cálido, no marca a campo. */
+  /* La misma tiza escribe los matemas: cian y naranja vivos, y el polvo
+     los lleva al papel. El cian de campaña no entra acá: apaga el grafo. */
   --tiza: var(--paper);
-  --tiza-fria: color-mix(in oklab, var(--paper), var(--cyan) calc(12% - var(--revelado) * 5%));
-  --tiza-calida: color-mix(in oklab, var(--paper), var(--orange) calc(14% - var(--revelado) * 5%));
+  --tiza-fria: color-mix(in oklab, #4db8ff, var(--paper) calc(var(--revelado) * 64%));
+  --tiza-calida: color-mix(in oklab, #f58220, var(--paper) calc(var(--revelado) * 54%));
   /* La presión: el trazo engorda a medida que la mano se afirma. */
   --presion: calc(4.8 + var(--revelado) * 1.2);
 
@@ -713,12 +714,12 @@ textarea:focus-visible {
   background: radial-gradient(86% 64% at 50% 38%, transparent 36%, rgb(0 0 0 / 0.5) 100%);
 }
 
-/* Lámpara de aula, no un brillo de marca. */
+/* Lámpara de aula: un soplo frío y uno cálido, como la tiza. */
 .grafo-luz {
   background:
-    radial-gradient(130% 22% at 50% 0%, color-mix(in srgb, var(--paper) 12%, transparent), transparent 72%),
-    radial-gradient(36% 28% at calc(50% + var(--aura-x)) calc(44% + var(--aura-y)), color-mix(in srgb, var(--paper) 5%, transparent), transparent 70%);
-  opacity: calc(0.5 + var(--aura-o) * 0.28);
+    radial-gradient(38% 30% at calc(50% + var(--aura-x)) calc(46% + var(--aura-y)), rgb(77 184 255 / 0.16), transparent 70%),
+    radial-gradient(52% 40% at calc(50% - var(--aura-x)) calc(62% - var(--aura-y)), rgb(245 130 32 / 0.1), transparent 72%);
+  opacity: calc(0.25 + var(--aura-o));
 }
 
 /* El viewBox lleva la proporción; max-height la reduce sin deformarla. */
@@ -1437,7 +1438,9 @@ textarea {
 
   .grafo-figura {
     padding: 0;
-    width: 96%;
+    width: 100%;
+    max-width: 100%;
+    max-height: 100%;
   }
 
   .grafo-letra-menor {

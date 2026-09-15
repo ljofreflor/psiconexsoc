@@ -58,11 +58,14 @@
     return hexToRgb(raw);
   }
 
-  function paint(ctx, data, cells, mixed, wpx, hpx) {
-    var cw = wpx / data.w;
-    var ch = hpx / data.h;
-    ctx.clearRect(0, 0, wpx, hpx);
-    ctx.font = Math.max(4, Math.floor(ch * 0.96)) + "px ui-monospace, SF Mono, Menlo, Consolas, monospace";
+  function raster(data, cells, mixed) {
+    var cw = 4;
+    var ch = 6;
+    var atlas = document.createElement("canvas");
+    atlas.width = data.w * cw;
+    atlas.height = data.h * ch;
+    var ctx = atlas.getContext("2d", { alpha: true });
+    ctx.font = Math.floor(ch * 0.95) + "px ui-monospace, SF Mono, Menlo, Consolas, monospace";
     ctx.textBaseline = "middle";
     ctx.textAlign = "center";
     var i = 0;
@@ -77,11 +80,25 @@
         ctx.fillText(glyph, (x + 0.5) * cw, cy);
       }
     }
+    return atlas;
   }
 
   function mount(data) {
     var decoded = data.frames.map(decodeFrame);
     var screens = [];
+    var orange = cssColor(document.body, "--orange", "#eb6608", [235, 102, 8]);
+    var cyan = cssColor(document.body, "--cyan", "#426f8e", [66, 111, 142]);
+    var grisAzul = mix(mix(cyan, orange, 0.38), [22, 30, 40], 0.42);
+    var vivid = mix(orange, [220, 48, 0], 0.22);
+    var sombra = mix(vivid, [70, 18, 0], 0.38);
+    var clara = mix(vivid, [255, 168, 72], 0.42);
+    var mixed = data.palette.map(function (hex) {
+      var p = hexToRgb(hex);
+      var luma = (0.2126 * p[0] + 0.7152 * p[1] + 0.0722 * p[2]) / 255;
+      var t = Math.max(0, Math.min(1, (luma - 0.5) * 2.05 + 0.42));
+      var warm = mix(sombra, clara, t);
+      return cssRgb(mix(grisAzul, warm, t));
+    });
 
     nodos.forEach(function (el) {
       var canvas = document.createElement("canvas");
@@ -89,26 +106,12 @@
       canvas.setAttribute("aria-hidden", "true");
       el.insertBefore(canvas, el.firstChild);
 
-      var orange = cssColor(el, "--orange", "#eb6608", [235, 102, 8]);
-      var cyan = cssColor(el, "--cyan", "#426f8e", [66, 111, 142]);
-      var grisAzul = mix(mix(cyan, orange, 0.38), [22, 30, 40], 0.42);
-      var vivid = mix(orange, [220, 48, 0], 0.22);
-      var sombra = mix(vivid, [70, 18, 0], 0.38);
-      var clara = mix(vivid, [255, 168, 72], 0.42);
-      var mixed = data.palette.map(function (hex) {
-        var p = hexToRgb(hex);
-        var luma = (0.2126 * p[0] + 0.7152 * p[1] + 0.0722 * p[2]) / 255;
-        var t = Math.max(0, Math.min(1, (luma - 0.5) * 2.05 + 0.42));
-        var warm = mix(sombra, clara, t);
-        return cssRgb(mix(grisAzul, warm, t));
-      });
-
       var ctx = canvas.getContext("2d");
       var lastW = 0;
       var lastH = 0;
 
       function size() {
-        var dpr = window.devicePixelRatio || 1;
+        var dpr = Math.min(1.25, window.devicePixelRatio || 1);
         var w = el.clientWidth;
         var h = el.clientHeight;
         if (!w || !h) return false;
@@ -120,40 +123,95 @@
         canvas.style.width = w + "px";
         canvas.style.height = h + "px";
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.imageSmoothingEnabled = true;
         return true;
       }
 
-      screens.push({ canvas: canvas, ctx: ctx, mixed: mixed, size: size, el: el });
+      screens.push({ canvas: canvas, ctx: ctx, size: size, el: el, on: true });
     });
 
     var frame = 0;
-    function draw() {
-      var cells = decoded[frame] || decoded[0];
+    var atlas = null;
+    var atlasAt = -1;
+
+    function atlasOf(i) {
+      if (atlasAt === i && atlas) return atlas;
+      atlas = raster(data, decoded[i] || decoded[0], mixed);
+      atlasAt = i;
+      return atlas;
+    }
+
+    function blit() {
+      var sheet = atlasOf(frame);
+      var iw = sheet.width;
+      var ih = sheet.height;
       for (var i = 0; i < screens.length; i++) {
         var s = screens[i];
-        if (!s.size()) continue;
-        paint(s.ctx, data, cells, s.mixed, s.el.clientWidth, s.el.clientHeight);
+        if (!s.on || !s.size()) continue;
+        var w = s.el.clientWidth;
+        var h = s.el.clientHeight;
+        var scale = Math.max(w / iw, h / ih);
+        var dw = iw * scale;
+        var dh = ih * scale;
+        s.ctx.clearRect(0, 0, w, h);
+        s.ctx.drawImage(sheet, (w - dw) / 2, (h - dh) / 2, dw, dh);
       }
     }
 
-    draw();
+    function visibleCount() {
+      var n = 0;
+      for (var i = 0; i < screens.length; i++) if (screens[i].on) n++;
+      return n;
+    }
+
+    blit();
     if (quiet || decoded.length < 2) return;
 
     var fps = data.fps || 6;
     var last = 0;
+    var running = false;
     function tick(now) {
+      if (!visibleCount()) {
+        running = false;
+        return;
+      }
       if (!last) last = now;
       if (now - last >= 1000 / fps) {
         frame = (frame + 1) % decoded.length;
         last = now;
-        draw();
+        blit();
       }
       window.requestAnimationFrame(tick);
     }
-    window.requestAnimationFrame(tick);
+
+    function go() {
+      if (running) return;
+      running = true;
+      last = 0;
+      window.requestAnimationFrame(tick);
+    }
+
+    if (typeof IntersectionObserver !== "undefined") {
+      var io = new IntersectionObserver(function (entries) {
+        for (var i = 0; i < entries.length; i++) {
+          var e = entries[i];
+          for (var s = 0; s < screens.length; s++) {
+            if (screens[s].canvas === e.target) screens[s].on = e.isIntersecting;
+          }
+        }
+        if (visibleCount()) {
+          blit();
+          go();
+        }
+      }, { rootMargin: "80px" });
+      screens.forEach(function (s) { io.observe(s.canvas); });
+    } else {
+      screens.forEach(function (s) { s.on = true; });
+      go();
+    }
 
     if (typeof ResizeObserver !== "undefined") {
-      var ro = new ResizeObserver(draw);
+      var ro = new ResizeObserver(blit);
       screens.forEach(function (s) { ro.observe(s.el); });
     }
   }
