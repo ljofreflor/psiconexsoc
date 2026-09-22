@@ -13,7 +13,7 @@
 
   var script = document.currentScript;
   var src = script && script.getAttribute("src");
-  var jsonUrl = (src ? src.replace(/[^/]+$/, "") : "js/").replace(/js\/?$/, "") + "assets/clase/frames.json?v=20260917";
+  var jsonUrl = (src ? src.replace(/[^/]+$/, "") : "js/").replace(/js\/?$/, "") + "assets/clase/frames.json?v=20260922";
 
   function hexToRgb(hex) {
     var n = parseInt(hex.replace("#", ""), 16);

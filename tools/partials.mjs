@@ -23,6 +23,7 @@ function seccionDe(rel) {
   if (rel === "index.html") return "inicio";
   if (rel === "clinica.html" || rel === "agenda.html") return "clinica";
   if (rel === "biblioteca.html" || rel.startsWith("biblioteca/")) return "biblioteca";
+  if (rel === "grafo.html") return "biblioteca";
   if (rel === "equipo.html") return "equipo";
   if (rel === "contacto.html") return "contacto";
   if (rel === "formacion.html" || rel.startsWith("formacion/")) return "formacion";

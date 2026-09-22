@@ -1,0 +1,35 @@
+[
+  {
+    "slug": "la-palabra-tiene-efectos",
+    "titulo": "La palabra tiene efectos",
+    "bajada": "Por qué la clínica empieza cuando alguien puede decir, y no cuando se le aplica un nombre.",
+    "autor": "PSICONEXSOC",
+    "fecha": "2026-09-07",
+    "minutos": 8,
+    "nivel": "Introducción",
+    "href": "biblioteca/la-palabra-tiene-efectos.html",
+    "estado": "borrador"
+  },
+  {
+    "slug": "el-malestar-tambien-es-de-epoca",
+    "titulo": "El malestar también es de época",
+    "bajada": "El sufrimiento es singular, pero no ocurre fuera de la historia ni de los discursos que lo nombran.",
+    "autor": "PSICONEXSOC",
+    "fecha": "2026-09-07",
+    "minutos": 10,
+    "nivel": "Profundización",
+    "href": "biblioteca/el-malestar-tambien-es-de-epoca.html",
+    "estado": "borrador"
+  },
+  {
+    "slug": "las-psicosis-y-sus-vertientes",
+    "titulo": "Las psicosis y sus vertientes",
+    "bajada": "El campo prioritario de investigación, leído como mapa y no como catálogo.",
+    "autor": "PSICONEXSOC",
+    "fecha": "2026-09-07",
+    "minutos": 12,
+    "nivel": "Lectura especializada",
+    "href": "biblioteca/las-psicosis-y-sus-vertientes.html",
+    "estado": "borrador"
+  }
+]

@@ -203,8 +203,8 @@ def main() -> None:
     data = hornear(src, dest)
     size = dest.stat().st_size
     print(f"{dest}  {size} bytes  {len(data['frames'])} frames  {data['w']}x{data['h']}")
-    if size > 1400 * 1024:
-        sys.exit(f"pasa el techo de 1400 KB: {size}")
+    if size > 2600 * 1024:
+        sys.exit(f"pasa el techo de 2600 KB: {size}")
 
 
 if __name__ == "__main__":

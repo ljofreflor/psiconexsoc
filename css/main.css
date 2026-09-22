@@ -922,6 +922,10 @@ textarea:focus-visible {
   border-bottom: 1px solid var(--line);
 }
 
+.section[id] {
+  scroll-margin-top: var(--header);
+}
+
 .section-kicker {
   color: var(--cyan);
   font-size: 0.8rem;
@@ -1237,6 +1241,145 @@ textarea {
   max-width: 36rem;
   margin: 0;
   color: var(--on-orange);
+}
+
+/* Después del naranja: el archivo es papel. Un corte, dos materias. */
+.portada-archivo {
+  padding: var(--space-8) 0;
+}
+
+.portada-archivo h2 {
+  font-family: var(--serif);
+  font-style: normal;
+  font-weight: 400;
+  font-size: clamp(2.4rem, 6vw, 4.2rem);
+  letter-spacing: -0.03em;
+  max-width: none;
+  margin: 0 0 var(--space-6);
+}
+
+.portada-archivo .actions a {
+  color: var(--text-ink);
+}
+
+.portada-mesa-cuerpo {
+  display: grid;
+  gap: var(--space-7);
+}
+
+.portada-mesa .archivo {
+  margin-top: 0;
+}
+
+.colaboraciones {
+  min-width: 0;
+}
+
+.colaboraciones h3 {
+  font-family: var(--serif);
+  font-style: normal;
+  font-weight: 400;
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  letter-spacing: -0.02em;
+  margin: 0 0 var(--space-5);
+}
+
+.colaboraciones-pieza {
+  position: relative;
+  display: block;
+  padding: 0 0 var(--space-6);
+  color: inherit;
+  text-decoration: none;
+}
+
+.colaboraciones-pieza:hover {
+  color: inherit;
+}
+
+.colaboraciones-logo {
+  display: block;
+  width: min(100%, 11.5rem);
+  height: auto;
+}
+
+.vinculo-logo {
+  margin: var(--space-5) 0;
+}
+
+.vinculo-logo a {
+  display: inline-block;
+}
+
+.vinculo-logo img {
+  display: block;
+  width: min(100%, 14rem);
+  height: auto;
+}
+
+.colaboraciones-nombre {
+  display: block;
+  font-family: var(--serif);
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.colaboraciones-sobre {
+  display: block;
+  margin-top: var(--space-3);
+  max-width: 16rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.colaboraciones-pieza::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 2rem;
+  height: 2rem;
+  border-right: 6px solid var(--orange);
+  border-bottom: 6px solid var(--orange);
+}
+
+@media (min-width: 900px) {
+  .portada-mesa-cuerpo {
+    grid-template-columns: minmax(0, 1fr) 13.5rem;
+    gap: var(--space-6);
+    align-items: start;
+  }
+
+  .colaboraciones {
+    text-align: right;
+    padding-top: 0.2rem;
+  }
+
+  .colaboraciones-sobre {
+    margin-left: auto;
+  }
+}
+
+.convoca-equipo {
+  margin-top: var(--space-8);
+  padding-top: var(--space-7);
+  border-top: 1px solid var(--line);
+}
+
+.convoca-equipo h2 {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  letter-spacing: -0.02em;
+  max-width: 16ch;
+  margin: 0 0 var(--space-3);
+}
+
+.convoca-equipo p {
+  max-width: 36rem;
+  margin: 0 0 var(--space-4);
 }
 
 /* Papel e tinta: archivo. No es un modo oscuro invertido. */
@@ -1921,4 +2064,36 @@ body.captura-cita .quote {
 .regime-reading .prose p,
 .regime-reading .prose li {
   font-family: var(--text);
+}
+
+/* ——— Mantel borromeo (colores del sistema) ———
+   Velo fijo encima (z-index 20): trama RSI. Sin celofán. */
+
+body.regime-campaign::before,
+body.regime-reading::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+  background-repeat: repeat;
+  background-size: 64px 64px;
+}
+
+/* Campaña: tinta + cian + papel — se lee sobre naranja */
+body.regime-campaign::before {
+  opacity: 0.32;
+  mix-blend-mode: soft-light;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='128' height='128' viewBox='0 0 128 128'%3E%3Cg fill='none' stroke-width='1.55' stroke-linecap='round'%3E%3Ccircle cx='32' cy='18' r='16' stroke='%231a1a1a'/%3E%3Ccircle cx='18' cy='42' r='16' stroke='%23426f8e'/%3E%3Ccircle cx='46' cy='42' r='16' stroke='%23ededed'/%3E%3Ccircle cx='96' cy='46' r='16' stroke='%231a1a1a'/%3E%3Ccircle cx='82' cy='22' r='16' stroke='%23426f8e'/%3E%3Ccircle cx='110' cy='22' r='16' stroke='%23ededed'/%3E%3Ccircle cx='32' cy='110' r='16' stroke='%231a1a1a'/%3E%3Ccircle cx='18' cy='86' r='16' stroke='%23426f8e'/%3E%3Ccircle cx='46' cy='86' r='16' stroke='%23ededed'/%3E%3Ccircle cx='96' cy='82' r='16' stroke='%231a1a1a'/%3E%3Ccircle cx='82' cy='106' r='16' stroke='%23426f8e'/%3E%3Ccircle cx='110' cy='106' r='16' stroke='%23ededed'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* Archivo: misma tríada, más quieta sobre papel */
+body.regime-reading::before {
+  opacity: 0.18;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='128' height='128' viewBox='0 0 128 128'%3E%3Cg fill='none' stroke-width='1.55' stroke-linecap='round'%3E%3Ccircle cx='32' cy='18' r='16' stroke='%23eb6608'/%3E%3Ccircle cx='18' cy='42' r='16' stroke='%23426f8e'/%3E%3Ccircle cx='46' cy='42' r='16' stroke='%231a1a1a'/%3E%3Ccircle cx='96' cy='46' r='16' stroke='%23eb6608'/%3E%3Ccircle cx='82' cy='22' r='16' stroke='%23426f8e'/%3E%3Ccircle cx='110' cy='22' r='16' stroke='%231a1a1a'/%3E%3Ccircle cx='32' cy='110' r='16' stroke='%23eb6608'/%3E%3Ccircle cx='18' cy='86' r='16' stroke='%23426f8e'/%3E%3Ccircle cx='46' cy='86' r='16' stroke='%231a1a1a'/%3E%3Ccircle cx='96' cy='82' r='16' stroke='%23eb6608'/%3E%3Ccircle cx='82' cy='106' r='16' stroke='%23426f8e'/%3E%3Ccircle cx='110' cy='106' r='16' stroke='%231a1a1a'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+body.captura-cita::before {
+  display: none;
 }
