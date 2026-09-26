@@ -15,7 +15,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="canonical" href="https://ljofreflor.github.io/psiconexsoc/agenda.html">
   <link rel="icon" href="assets/isotipo.svg">
-  <link rel="stylesheet" href="css/main.css?v=20260922b">
+  <link rel="stylesheet" href="css/main.css?v=20260926">
   <!-- partial:fonts -->
   <link rel="preload" href="assets/fonts/inter-latin-400.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/playfair-latin-400.woff2" as="font" type="font/woff2" crossorigin>
@@ -79,15 +79,48 @@
 
     <section class="hero hero-page">
       <div class="wrap">
-        <p class="hero-kicker">Reservar</p>
-        <h1 class="hero-page-title">Una hora se toma con crédito o pago</h1>
-        <p class="hero-lede">La primera conversación dura entre 30 y 50 minutos. No obliga a un tratamiento. Se reserva desde una cuenta. Un código de invitación, de campaña o una gift card puede cargar el saldo.</p>
+        <p class="hero-kicker">Agenda</p>
+        <h1 class="hero-page-title">Reservar una hora</h1>
+        <p class="hero-lede">La disponibilidad se lee de Google Calendar y se pinta aquí. La reserva se confirma en Google. Una hora también se puede tomar con crédito o pago desde la cuenta.</p>
         <div class="actions">
-          <a class="btn btn-on-orange" href="cuenta.html" data-track="AgendaCta">Entrar y reservar</a>
-          <a class="btn btn-ghost" href="tel:+56981216395">+56 9 8121 6395</a>
+          <a class="btn btn-on-orange" href="#calendario-sitio">Ver horarios</a>
+          <a class="btn btn-ghost" data-calendario-google href="https://calendar.app.google/C9fMj6JkVmG1vV1B7" rel="noopener">Abrir solo Google</a>
         </div>
       </div>
     </section>
+
+    <section class="booking-demo" id="calendario-sitio" aria-labelledby="cal-title">
+      <div class="wrap">
+        <div class="cal-toolbar">
+          <button type="button" class="btn btn-ghost btn-compact" data-cal-prev aria-label="Semana anterior">←</button>
+          <div class="cal-toolbar-center">
+            <h2 id="cal-title" class="booking-title" data-cal-label>Semana</h2>
+            <p class="booking-lede" data-cal-fuente>Disponibilidad desde Google, con el diseño de este sitio.</p>
+            <p class="cal-status" data-cal-status role="status" aria-live="polite"></p>
+          </div>
+          <div class="cal-toolbar-right">
+            <button type="button" class="btn btn-ghost btn-compact" data-cal-reload title="Actualizar desde Google">↻</button>
+            <button type="button" class="btn btn-ghost btn-compact" data-cal-next aria-label="Semana siguiente">→</button>
+          </div>
+        </div>
+        <div class="cal-week" data-cal-week role="grid" aria-label="Horarios de la semana"></div>
+        <aside class="booking-summary" data-booking-summary hidden>
+          <h3 class="booking-summary-title">Franja elegida</h3>
+          <p class="booking-total" data-booking-slot></p>
+          <p class="booking-manual">Al continuar se abre Google Calendar para confirmar la hora allí.</p>
+          <div class="booking-pay-actions">
+            <a class="btn btn-primary" data-continuar-google href="https://calendar.app.google/C9fMj6JkVmG1vV1B7" rel="noopener">Continuar en Google Calendar</a>
+            <button type="button" class="btn btn-ghost" data-cal-limpiar>Elegir otra</button>
+          </div>
+        </aside>
+        <p class="booking-policy">
+          También se puede ir directo a
+          <a data-calendario-google href="https://calendar.app.google/C9fMj6JkVmG1vV1B7" rel="noopener">calendar.app.google</a>.
+          Este no es un canal de urgencia.
+        </p>
+      </div>
+    </section>
+
     <div class="reading-sheet">
     <section class="section">
       <div class="wrap">
@@ -137,10 +170,11 @@
     </div>
   </footer>
   <!-- /partial:footer -->
-  <script src="js/site.js?v=20260922"></script>
+  <script src="js/site.js?v=20260926"></script>
   <script src="js/metricas.js?v=20260907"></script>
   <script src="js/nav.js?v=20260907"></script>
   <script src="js/clase.js?v=20260922"></script>
+  <script src="js/agenda-encuadre.js?v=20260926"></script>
   <script>
     (function () {
       var cfg = window.PSICONEXSOC;

@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard de Métricas — PSICONEXSOC</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="/assets/isotipo.svg">
+  <link rel="stylesheet" href="/css/main.css?v=20260946">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0"></script>
+</head>
+<body class="regime-reading">
+  <header class="site-header">
+    <div class="wrap header-bar">
+      <a class="brand" href="/index.html">
+        <img src="/assets/isotipo.svg" alt="">
+        <span class="brand-name">PSICONEXSOC</span>
+      </a>
+      <nav class="nav-desktop">
+        <a href="/panel.html">Panel</a>
+        <a href="/equipo-interno/metricas.html" aria-current="page">Métricas</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" style="max-width: 1200px; margin: 40px auto; padding: 20px;">
+    
+    <h1>Dashboard de Métricas</h1>
+    <p class="subtitle">Análisis de no-shows, ingresos y utilización de calendario</p>
+
+    <!-- KPIs principales -->
+    <div class="kpis-grid">
+      <div class="kpi-card">
+        <h3>Tasa de No-Show</h3>
+        <div class="kpi-valor" id="kpi-no-show">--</div>
+        <p class="kpi-subtitle">Último mes</p>
+      </div>
+      <div class="kpi-card">
+        <h3>Ingresos Protegidos</h3>
+        <div class="kpi-valor" id="kpi-ingresos">--</div>
+        <p class="kpi-subtitle">Depósitos retenidos</p>
+      </div>
+      <div class="kpi-card">
+        <h3>Utilización</h3>
+        <div class="kpi-valor" id="kpi-utilizacion">--</div>
+        <p class="kpi-subtitle">Slots tomados vs disponibles</p>
+      </div>
+      <div class="kpi-card">
+        <h3>Total Reservas</h3>
+        <div class="kpi-valor" id="kpi-total-reservas">--</div>
+        <p class="kpi-subtitle">Este mes</p>
+      </div>
+    </div>
+
+    <!-- Gráficos -->
+    <div class="charts-grid">
+      <div class="chart-card">
+        <h3>Tendencia de No-Shows (últimos 6 meses)</h3>
+        <canvas id="chart-no-shows"></canvas>
+      </div>
+      <div class="chart-card">
+        <h3>Distribución de Asistencia</h3>
+        <canvas id="chart-asistencia"></canvas>
+      </div>
+    </div>
+
+    <!-- Tabla detallada -->
+    <div class="table-card">
+      <div class="table-header">
+        <h3>Detalle por Mes</h3>
+        <button class="btn btn-ghost" onclick="exportarCSV()">Exportar CSV</button>
+      </div>
+      <div class="table-responsive">
+        <table id="tabla-metricas">
+          <thead>
+            <tr>
+              <th>Mes</th>
+              <th>Total Reservas</th>
+              <th>Asistencias</th>
+              <th>No-Shows</th>
+              <th>Tasa No-Show</th>
+              <th>Cancelaciones</th>
+              <th>Ingresos Protegidos</th>
+            </tr>
+          </thead>
+          <tbody id="tabla-body">
+            <tr><td colspan="7">Cargando...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Comparación antes/después de depósitos -->
+    <div class="comparison-card">
+      <h3>Impacto del Sistema de Depósitos</h3>
+      <div class="comparison-grid">
+        <div>
+          <h4>Antes (sin depósitos)</h4>
+          <p class="metric">Tasa estimada: <strong id="before-rate">15-20%</strong></p>
+          <p class="metric">Ingresos perdidos/mes: <strong id="before-loss">~$XXX.XXX</strong></p>
+        </div>
+        <div>
+          <h4>Después (con depósitos)</h4>
+          <p class="metric">Tasa actual: <strong id="after-rate">--</strong></p>
+          <p class="metric">Ingresos protegidos/mes: <strong id="after-protected">--</strong></p>
+        </div>
+        <div class="improvement">
+          <h4>Mejora</h4>
+          <p class="metric large" id="improvement-percentage">--</p>
+          <p class="metric">ROI del sistema</p>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    const SUPABASE_URL = 'https://your-project.supabase.co'
+    const SUPABASE_ANON_KEY = 'your-anon-key'
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+
+    let datosMetricas = []
+
+    /**
+     * Inicializar dashboard
+     */
+    async function inicializar() {
+      try {
+        // Verificar que el usuario es parte del equipo
+        const { data: { session } } = await supabase.auth.getSession()
+        
+        if (!session) {
+          window.location.href = '/cuenta.html'
+          return
+        }
+
+        const { data: perfil } = await supabase
+          .from('perfiles')
+          .select('es_equipo')
+          .eq('id', session.user.id)
+          .single()
+
+        if (!perfil || !perfil.es_equipo) {
+          alert('No tienes permisos para acceder a este dashboard')
+          window.location.href = '/'
+          return
+        }
+
+        // Cargar datos
+        await cargarMetricas()
+        await cargarKPIs()
+        renderizarGraficos()
+        renderizarTabla()
+        calcularComparacion()
+
+      } catch (error) {
+        console.error('Error al inicializar dashboard:', error)
+        alert('Error al cargar métricas')
+      }
+    }
+
+    /**
+     * Cargar métricas desde la vista SQL
+     */
+    async function cargarMetricas() {
+      const { data, error } = await supabase
+        .from('metricas_no_shows')
+        .select('*')
+        .order('mes', { ascending: false })
+        .limit(12)
+
+      if (error) {
+        console.error('Error cargando métricas:', error)
+        return
+      }
+
+      datosMetricas = data || []
+    }
+
+    /**
+     * Cargar KPIs del mes actual
+     */
+    async function cargarKPIs() {
+      const inicioMes = new Date()
+      inicioMes.setDate(1)
+      inicioMes.setHours(0, 0, 0, 0)
+
+      // Total reservas del mes
+      const { data: reservasMes } = await supabase
+        .from('reservas')
+        .select('id, asistencia, deposito_estado, deposito_monto')
+        .gte('inicio', inicioMes.toISOString())
+
+      const totalReservas = reservasMes?.length || 0
+      const noShows = reservasMes?.filter(r => r.asistencia === 'no_asistio').length || 0
+      const tasaNoShow = totalReservas > 0 ? ((noShows / totalReservas) * 100).toFixed(1) : 0
+      const ingresosProtegidos = reservasMes
+        ?.filter(r => r.deposito_estado === 'no_devuelto')
+        .reduce((sum, r) => sum + (r.deposito_monto || 0), 0) || 0
+
+      // Utilización de calendario
+      const { data: bloquesTotales } = await supabase
+        .from('bloques')
+        .select('id, tomado')
+        .gte('inicio', inicioMes.toISOString())
+
+      const slotsTomados = bloquesTotales?.filter(b => b.tomado).length || 0
+      const slotsTotal = bloquesTotales?.length || 1
+      const utilizacion = ((slotsTomados / slotsTotal) * 100).toFixed(1)
+
+      // Actualizar UI
+      document.getElementById('kpi-no-show').textContent = `${tasaNoShow}%`
+      document.getElementById('kpi-ingresos').textContent = `$${ingresosProtegidos.toLocaleString('es-CL')}`
+      document.getElementById('kpi-utilizacion').textContent = `${utilizacion}%`
+      document.getElementById('kpi-total-reservas').textContent = totalReservas
+
+      // Colorear según umbral
+      const kpiNoShow = document.getElementById('kpi-no-show')
+      if (tasaNoShow > 15) {
+        kpiNoShow.style.color = '#ef4444'
+      } else if (tasaNoShow > 10) {
+        kpiNoShow.style.color = '#f59e0b'
+      } else {
+        kpiNoShow.style.color = '#10b981'
+      }
+    }
+
+    /**
+     * Renderizar gráfico de tendencia
+     */
+    function renderizarGraficos() {
+      // Gráfico de línea: tendencia de no-shows
+      const ctx1 = document.getElementById('chart-no-shows').getContext('2d')
+      new Chart(ctx1, {
+        type: 'line',
+        data: {
+          labels: datosMetricas.reverse().map(d => formatearMes(d.mes)),
+          datasets: [{
+            label: 'Tasa de No-Show (%)',
+            data: datosMetricas.map(d => d.tasa_no_show_porcentaje),
+            borderColor: '#eb6608',
+            backgroundColor: 'rgba(235, 102, 8, 0.1)',
+            tension: 0.4,
+            fill: true
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              max: 25,
+              title: { display: true, text: 'Porcentaje' }
+            }
+          }
+        }
+      })
+
+      // Gráfico de dona: distribución de asistencia del último mes
+      const ultimoMes = datosMetricas[datosMetricas.length - 1]
+      const ctx2 = document.getElementById('chart-asistencia').getContext('2d')
+      new Chart(ctx2, {
+        type: 'doughnut',
+        data: {
+          labels: ['Asistieron', 'No asistieron', 'Cancelaciones a tiempo', 'Cancelaciones tarde'],
+          datasets: [{
+            data: [
+              ultimoMes.asistencias,
+              ultimoMes.no_shows,
+              ultimoMes.cancelaciones_a_tiempo,
+              ultimoMes.cancelaciones_tarde
+            ],
+            backgroundColor: ['#10b981', '#ef4444', '#3b82f6', '#f59e0b']
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false
+        }
+      })
+    }
+
+    /**
+     * Renderizar tabla de métricas
+     */
+    function renderizarTabla() {
+      const tbody = document.getElementById('tabla-body')
+      tbody.innerHTML = datosMetricas.map(mes => `
+        <tr>
+          <td>${formatearMes(mes.mes)}</td>
+          <td>${mes.total_reservas}</td>
+          <td>${mes.asistencias}</td>
+          <td>${mes.no_shows}</td>
+          <td><strong>${mes.tasa_no_show_porcentaje}%</strong></td>
+          <td>${mes.cancelaciones_a_tiempo + mes.cancelaciones_tarde}</td>
+          <td>$${(mes.ingresos_protegidos_depositos || 0).toLocaleString('es-CL')}</td>
+        </tr>
+      `).join('')
+    }
+
+    /**
+     * Calcular comparación antes/después
+     */
+    function calcularComparacion() {
+      const tasaActual = datosMetricas.length > 0 
+        ? datosMetricas[datosMetricas.length - 1].tasa_no_show_porcentaje 
+        : 0
+      
+      const ingresosProtegidos = datosMetricas
+        .slice(-3)
+        .reduce((sum, m) => sum + (m.ingresos_protegidos_depositos || 0), 0) / 3
+
+      document.getElementById('after-rate').textContent = `${tasaActual}%`
+      document.getElementById('after-protected').textContent = `$${Math.round(ingresosProtegidos).toLocaleString('es-CL')}`
+
+      // Calcular mejora (asumiendo tasa anterior 15-20%)
+      const tasaAnteriorEstimada = 17.5
+      const mejoraPorcentual = ((tasaAnteriorEstimada - tasaActual) / tasaAnteriorEstimada * 100).toFixed(0)
+      
+      document.getElementById('improvement-percentage').textContent = mejoraPorcentual > 0 
+        ? `↓ ${mejoraPorcentual}% reducción`
+        : 'En proceso'
+    }
+
+    /**
+     * Exportar métricas a CSV
+     */
+    function exportarCSV() {
+      const csv = [
+        ['Mes', 'Total Reservas', 'Asistencias', 'No-Shows', 'Tasa No-Show %', 'Cancelaciones', 'Ingresos Protegidos'],
+        ...datosMetricas.map(m => [
+          formatearMes(m.mes),
+          m.total_reservas,
+          m.asistencias,
+          m.no_shows,
+          m.tasa_no_show_porcentaje,
+          m.cancelaciones_a_tiempo + m.cancelaciones_tarde,
+          m.ingresos_protegidos_depositos || 0
+        ])
+      ].map(row => row.join(',')).join('\n')
+
+      const blob = new Blob([csv], { type: 'text/csv' })
+      const url = window.URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `metricas-psiconexsoc-${new Date().toISOString().slice(0,10)}.csv`
+      a.click()
+    }
+
+    function formatearMes(isoString) {
+      return new Date(isoString).toLocaleDateString('es-CL', {
+        month: 'short',
+        year: 'numeric'
+      })
+    }
+
+    // Iniciar
+    inicializar()
+  </script>
+
+  <style>
+    .subtitle {
+      color: var(--muted);
+      margin-bottom: 40px;
+    }
+
+    .kpis-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    .kpi-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 24px;
+    }
+
+    .kpi-card h3 {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 12px;
+      font-weight: 500;
+    }
+
+    .kpi-valor {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--orange);
+      margin-bottom: 8px;
+    }
+
+    .kpi-subtitle {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    .charts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    .chart-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 24px;
+      height: 350px;
+    }
+
+    .chart-card h3 {
+      margin-bottom: 20px;
+      font-size: 1.1rem;
+    }
+
+    .table-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 24px;
+      margin-bottom: 40px;
+    }
+
+    .table-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .table-responsive {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th {
+      text-align: left;
+      padding: 12px;
+      border-bottom: 2px solid var(--line);
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--muted);
+    }
+
+    td {
+      padding: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    tr:hover {
+      background: rgba(255,255,255,0.02);
+    }
+
+    .comparison-card {
+      background: rgba(235, 102, 8, 0.05);
+      border: 2px solid var(--orange);
+      border-radius: 8px;
+      padding: 30px;
+    }
+
+    .comparison-card h3 {
+      margin-bottom: 20px;
+    }
+
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 30px;
+    }
+
+    .comparison-grid h4 {
+      color: var(--orange);
+      margin-bottom: 15px;
+    }
+
+    .metric {
+      margin: 10px 0;
+      font-size: 0.95rem;
+    }
+
+    .metric.large {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--orange);
+    }
+
+    .improvement {
+      text-align: center;
+    }
+  </style>
+</body>
+</html>

@@ -19,6 +19,8 @@
     futureOrigin: "https://psiconexsoc.com",
     telefono: "+56981216395",
     telefonoTexto: "+56 9 8121 6395",
+    calendarioGoogle: "https://calendar.app.google/C9fMj6JkVmG1vV1B7",
+    agendaHoras: ["09:00", "10:10", "11:20", "15:00", "16:10", "17:20"],
     honorarioClp: null,
     plausibleDomain: "",
     supabaseUrl: "",
@@ -27,9 +29,36 @@
     googleClientId: "",
     appleClientId: "",
     profesionales: [
-      "José Joaquín Valderrama",
-      "Vicente Molina Toro",
-      "Agustín Artigas Osorio"
+      {
+        id: "valderrama",
+        nombre: "José Joaquín Valderrama",
+        orientacion: "Psicoanálisis de orientación lacaniana",
+        telefono: "",
+        telefonoTexto: "",
+        secretarioTelefono: "",
+        secretarioTelefonoTexto: "",
+        secretarioNombre: ""
+      },
+      {
+        id: "molina",
+        nombre: "Vicente Molina Toro",
+        orientacion: "Psicoanálisis de orientación psicodinámica",
+        telefono: "",
+        telefonoTexto: "",
+        secretarioTelefono: "",
+        secretarioTelefonoTexto: "",
+        secretarioNombre: ""
+      },
+      {
+        id: "artigas",
+        nombre: "Agustín Artigas Osorio",
+        orientacion: "Psicoanálisis relacional",
+        telefono: "",
+        telefonoTexto: "",
+        secretarioTelefono: "",
+        secretarioTelefonoTexto: "",
+        secretarioNombre: ""
+      }
     ]
   };
 
@@ -53,6 +82,10 @@
 
   cfg.agendaHref = function (desde) {
     return cfg.pagina("agenda.html", { desde: desde || "" });
+  };
+
+  cfg.calendarioHref = function () {
+    return cfg.calendarioGoogle || cfg.agendaHref("calendario");
   };
 
   cfg.cuentaHref = function (extra) {
@@ -92,6 +125,31 @@
 
   cfg.param = function (name) {
     return new URLSearchParams(location.search).get(name) || "";
+  };
+
+  cfg.contactosPublicos = function () {
+    var out = [];
+    (cfg.profesionales || []).forEach(function (p) {
+      if (typeof p === "string") return;
+      if (p.telefono && p.telefonoTexto) {
+        out.push({
+          profesional: p.nombre,
+          rol: "directo",
+          tel: p.telefono,
+          texto: p.telefonoTexto
+        });
+      }
+      if (p.secretarioTelefono && p.secretarioTelefonoTexto) {
+        out.push({
+          profesional: p.nombre,
+          rol: "secretario",
+          etiqueta: p.secretarioNombre || "Secretario/a",
+          tel: p.secretarioTelefono,
+          texto: p.secretarioTelefonoTexto
+        });
+      }
+    });
+    return out;
   };
 
   if (cfg.param("captura") === "1") {

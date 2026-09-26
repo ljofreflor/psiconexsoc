@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Reagendar mi hora — PSICONEXSOC</title>
+  <meta name="description" content="Reagenda tu hora de manera rápida y sencilla">
+  <link rel="icon" href="/assets/isotipo.svg">
+  <link rel="stylesheet" href="/css/main.css?v=20260946">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="regime-reading">
+  <div class="container" style="max-width: 600px; margin: 50px auto; padding: 20px;">
+    
+    <div id="loading-state" class="loading-container">
+      <div class="spinner"></div>
+      <p>Cargando información de tu reserva...</p>
+    </div>
+
+    <div id="error-state" class="error-container" hidden>
+      <h2>No pudimos cargar tu reserva</h2>
+      <p id="error-message"></p>
+      <a href="/cuenta.html" class="btn btn-primary">Ir a mi cuenta</a>
+    </div>
+
+    <div id="reschedule-form" hidden>
+      <div class="card">
+        <h1>Reagendar mi hora</h1>
+        
+        <div class="reserva-actual">
+          <h3>Reserva actual:</h3>
+          <p><strong>Profesional:</strong> <span id="profesional-actual"></span></p>
+          <p><strong>Fecha y hora:</strong> <span id="fecha-actual"></span></p>
+        </div>
+
+        <div class="policy-warning">
+          <p><strong>⚠️ Política de cancelación</strong></p>
+          <p id="policy-text"></p>
+        </div>
+
+        <h3>Selecciona un nuevo horario:</h3>
+        
+        <div class="slots-disponibles" id="slots-container">
+          <!-- Se llenarán dinámicamente -->
+        </div>
+
+        <div class="actions">
+          <button class="btn btn-primary" id="btn-confirmar" disabled>
+            Confirmar reagendamiento
+          </button>
+          <a href="/cuenta.html" class="btn btn-ghost">Cancelar</a>
+        </div>
+      </div>
+    </div>
+
+    <div id="success-state" hidden>
+      <div class="confirmacion-success">
+        <h2>✓ Hora reagendada exitosamente</h2>
+        <div class="nueva-reserva">
+          <p><strong>Nueva fecha y hora:</strong></p>
+          <p id="nueva-fecha"></p>
+        </div>
+        <p>Recibirás un email de confirmación con los nuevos detalles.</p>
+        <a href="/cuenta.html" class="btn btn-primary">Volver a mi cuenta</a>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // Configuración Supabase (debe coincidir con tu proyecto)
+    const SUPABASE_URL = 'https://your-project.supabase.co'
+    const SUPABASE_ANON_KEY = 'your-anon-key'
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+
+    let reservaActual = null
+    let nuevoSlotSeleccionado = null
+
+    /**
+     * Inicializar página de reagendamiento
+     */
+    async function inicializar() {
+      const urlParams = new URLSearchParams(window.location.search)
+      const reservaId = urlParams.get('reserva') || urlParams.get('r')
+
+      if (!reservaId) {
+        mostrarError('No se especificó una reserva para reagendar')
+        return
+      }
+
+      try {
+        // Obtener sesión del usuario
+        const { data: { session } } = await supabase.auth.getSession()
+        
+        if (!session) {
+          // Redirigir a login con redirect back
+          window.location.href = `/cuenta.html?redirect=${encodeURIComponent(window.location.href)}`
+          return
+        }
+
+        // Cargar reserva
+        const { data: reserva, error } = await supabase
+          .from('reservas')
+          .select('*')
+          .eq('id', reservaId)
+          .eq('perfil_id', session.user.id)
+          .single()
+
+        if (error || !reserva) {
+          mostrarError('Reserva no encontrada o no tienes permisos para reagendarla')
+          return
+        }
+
+        reservaActual = reserva
+
+        // Verificar que aún puede reagendar
+        const puedeReagendar = await verificarPuedeReagendar(reserva)
+        if (!puedeReagendar.puede) {
+          mostrarError(puedeReagendar.razon)
+          return
+        }
+
+        // Mostrar información de la reserva
+        mostrarReservaActual(reserva)
+
+        // Cargar slots disponibles
+        await cargarSlotsDisponibles(reserva.profesional)
+
+        document.getElementById('loading-state').hidden = true
+        document.getElementById('reschedule-form').hidden = false
+
+      } catch (error) {
+        console.error('Error al inicializar:', error)
+        mostrarError('Ocurrió un error al cargar tu reserva')
+      }
+    }
+
+    /**
+     * Verificar si puede reagendar según política
+     */
+    async function verificarPuedeReagendar(reserva) {
+      // Verificar que la reserva esté activa
+      if (reserva.estado !== 'tomada') {
+        return { puede: false, razon: 'Esta reserva ya fue cancelada o movida' }
+      }
+
+      // Verificar reagendamientos del mes
+      const inicioMes = new Date()
+      inicioMes.setDate(1)
+      inicioMes.setHours(0, 0, 0, 0)
+
+      const { data: reagendamientos } = await supabase
+        .from('reagendamientos')
+        .select('id')
+        .eq('perfil_id', reserva.perfil_id)
+        .gte('mes', inicioMes.toISOString())
+
+      if (reagendamientos && reagendamientos.length >= 2) {
+        return { 
+          puede: false, 
+          razon: 'Ya utilizaste tus 2 reagendamientos del mes. Para cambios adicionales, contacta directamente.' 
+        }
+      }
+
+      // Calcular horas hasta la reserva
+      const horasHasta = (new Date(reserva.inicio) - new Date()) / (1000 * 60 * 60)
+      
+      // Actualizar texto de política
+      document.getElementById('policy-text').textContent = 
+        horasHasta >= 48
+          ? 'Podés reagendar: hay 48 horas o más. Coordiná la nueva hora con el equipo.'
+          : 'Quedan menos de 48 horas: no se reagenda. La hora permanece a tu nombre.'
+
+      if (horasHasta < 48) {
+        return {
+          puede: false,
+          razon: 'Con menos de 48 horas de anticipación no es posible reagendar. Contactá al secretario solo si hay una situación excepcional.'
+        }
+      }
+
+      return { puede: true }
+    }
+
+    /**
+     * Mostrar información de la reserva actual
+     */
+    function mostrarReservaActual(reserva) {
+      document.getElementById('profesional-actual').textContent = reserva.profesional
+      document.getElementById('fecha-actual').textContent = new Date(reserva.inicio).toLocaleString('es-CL', {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      })
+    }
+
+    /**
+     * Cargar slots disponibles para reagendar
+     */
+    async function cargarSlotsDisponibles(profesional) {
+      const ahora = new Date()
+      const en7Dias = new Date(ahora.getTime() + 7 * 24 * 60 * 60 * 1000)
+
+      const { data: bloques } = await supabase
+        .from('bloques')
+        .select('*')
+        .eq('profesional', profesional)
+        .eq('tomado', false)
+        .gte('inicio', ahora.toISOString())
+        .lte('inicio', en7Dias.toISOString())
+        .order('inicio', { ascending: true })
+        .limit(10)
+
+      const container = document.getElementById('slots-container')
+      
+      if (!bloques || bloques.length === 0) {
+        container.innerHTML = '<p class="no-slots">No hay horarios disponibles en los próximos 7 días. Por favor contacta directamente.</p>'
+        return
+      }
+
+      container.innerHTML = bloques.map(bloque => `
+        <button class="slot-card" data-slot-id="${bloque.id}" onclick="seleccionarSlot('${bloque.id}', '${bloque.inicio}', '${bloque.fin}')">
+          <span class="slot-day">${formatearDia(bloque.inicio)}</span>
+          <span class="slot-time">${formatearHora(bloque.inicio)} - ${formatearHora(bloque.fin)}</span>
+        </button>
+      `).join('')
+    }
+
+    /**
+     * Seleccionar un nuevo slot
+     */
+    function seleccionarSlot(bloqueId, inicio, fin) {
+      // Desmarcar todos
+      document.querySelectorAll('.slot-card').forEach(el => el.classList.remove('selected'))
+      
+      // Marcar el seleccionado
+      event.target.closest('.slot-card').classList.add('selected')
+      
+      nuevoSlotSeleccionado = { bloque_id: bloqueId, inicio, fin }
+      document.getElementById('btn-confirmar').disabled = false
+    }
+
+    /**
+     * Confirmar reagendamiento
+     */
+    document.getElementById('btn-confirmar')?.addEventListener('click', async () => {
+      if (!nuevoSlotSeleccionado) return
+
+      try {
+        document.getElementById('btn-confirmar').disabled = true
+        document.getElementById('btn-confirmar').textContent = 'Procesando...'
+
+        // Llamar a Edge Function para reagendar
+        const { data, error } = await supabase.functions.invoke('reagendar-reserva', {
+          body: {
+            reserva_id: reservaActual.id,
+            nuevo_bloque_id: nuevoSlotSeleccionado.bloque_id,
+            nuevo_inicio: nuevoSlotSeleccionado.inicio,
+            nuevo_fin: nuevoSlotSeleccionado.fin
+          }
+        })
+
+        if (error) throw error
+
+        // Mostrar confirmación
+        document.getElementById('reschedule-form').hidden = true
+        document.getElementById('nueva-fecha').textContent = new Date(nuevoSlotSeleccionado.inicio).toLocaleString('es-CL', {
+          weekday: 'long',
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        })
+        document.getElementById('success-state').hidden = false
+
+      } catch (error) {
+        console.error('Error al reagendar:', error)
+        alert('Ocurrió un error al reagendar. Por favor intenta nuevamente o contacta soporte.')
+        document.getElementById('btn-confirmar').disabled = false
+        document.getElementById('btn-confirmar').textContent = 'Confirmar reagendamiento'
+      }
+    })
+
+    /**
+     * Helpers
+     */
+    function formatearDia(isoString) {
+      return new Date(isoString).toLocaleDateString('es-CL', {
+        weekday: 'short',
+        day: 'numeric',
+        month: 'short'
+      })
+    }
+
+    function formatearHora(isoString) {
+      return new Date(isoString).toLocaleTimeString('es-CL', {
+        hour: '2-digit',
+        minute: '2-digit'
+      })
+    }
+
+    function mostrarError(mensaje) {
+      document.getElementById('loading-state').hidden = true
+      document.getElementById('error-message').textContent = mensaje
+      document.getElementById('error-state').hidden = false
+    }
+
+    // Iniciar al cargar
+    inicializar()
+  </script>
+
+  <style>
+    .loading-container {
+      text-align: center;
+      padding: 40px;
+    }
+
+    .spinner {
+      border: 3px solid rgba(255,255,255,0.1);
+      border-top: 3px solid var(--orange);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 20px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 30px;
+    }
+
+    .reserva-actual {
+      background: rgba(235, 102, 8, 0.1);
+      padding: 20px;
+      border-radius: 4px;
+      margin: 20px 0;
+    }
+
+    .policy-warning {
+      background: #fff3e0;
+      color: #1a1a1a;
+      padding: 15px;
+      border-radius: 4px;
+      border-left: 4px solid var(--orange);
+      margin: 20px 0;
+    }
+
+    .slots-disponibles {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 12px;
+      margin: 20px 0;
+    }
+
+    .slot-card {
+      background: var(--black);
+      border: 2px solid var(--line);
+      border-radius: 6px;
+      padding: 15px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .slot-card:hover {
+      border-color: var(--orange);
+      background: rgba(235, 102, 8, 0.05);
+    }
+
+    .slot-card.selected {
+      border-color: var(--orange);
+      background: rgba(235, 102, 8, 0.15);
+    }
+
+    .slot-day {
+      font-size: 0.85rem;
+      color: var(--muted);
+      text-transform: capitalize;
+    }
+
+    .slot-time {
+      font-weight: 600;
+      color: var(--paper);
+    }
+
+    .actions {
+      margin-top: 30px;
+      display: flex;
+      gap: 15px;
+    }
+
+    .confirmacion-success {
+      text-align: center;
+      padding: 40px;
+    }
+
+    .confirmacion-success h2 {
+      color: var(--orange);
+      margin-bottom: 20px;
+    }
+
+    .nueva-reserva {
+      background: rgba(235, 102, 8, 0.1);
+      padding: 20px;
+      border-radius: 4px;
+      margin: 20px 0;
+    }
+  </style>
+</body>
+</html>

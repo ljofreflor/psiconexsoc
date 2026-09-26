@@ -1,0 +1,5 @@
+[functions.notificar-pedido-hora]
+verify_jwt = false
+
+[functions.agenda-disponibilidad]
+verify_jwt = false

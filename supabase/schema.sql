@@ -446,3 +446,26 @@ grant select on public.configuracion, public.bloques to anon, authenticated;
 grant select, insert, update, delete on public.bloques, public.configuracion, public.codigos to authenticated;
 grant select on public.perfiles, public.movimientos, public.reservas, public.reagendamientos, public.pagos, public.canjes, public.solicitudes to authenticated;
 grant insert, update on public.perfiles to authenticated;
+
+-- Pedidos de hora (también en migrations/20260926_pedidos_hora.sql)
+create table if not exists public.pedidos_hora (
+  id uuid primary key default gen_random_uuid(),
+  tipo text not null check (tipo in ('orientacion', 'sesion')),
+  nombre text not null,
+  correo text not null,
+  telefono text,
+  modalidad text,
+  franjas text not null,
+  nota text,
+  origen text default 'agenda',
+  notificado_tel boolean not null default false,
+  notificado_email boolean not null default false,
+  error_notif text,
+  created_at timestamptz not null default now()
+);
+alter table public.pedidos_hora enable row level security;
+drop policy if exists pedidos_hora_equipo on public.pedidos_hora;
+create policy pedidos_hora_equipo on public.pedidos_hora
+  for select using (public.es_equipo());
+revoke all on public.pedidos_hora from anon, authenticated;
+grant select on public.pedidos_hora to authenticated;
