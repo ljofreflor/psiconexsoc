@@ -1031,6 +1031,23 @@ textarea:focus-visible {
   box-shadow: none;
 }
 
+.member-foto {
+  aspect-ratio: 1 / 1;
+  width: min(100%, 11rem);
+  margin: 0 0 var(--space-4);
+  border: 1px solid var(--line);
+  background:
+    linear-gradient(160deg, color-mix(in srgb, var(--cyan) 22%, transparent), transparent 55%),
+    color-mix(in srgb, var(--paper) 8%, var(--black));
+}
+
+.member-foto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
 .member h3,
 .area-block h3 {
   color: var(--orange);

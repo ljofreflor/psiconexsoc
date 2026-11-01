@@ -10,15 +10,22 @@
   // 5. UPDATE perfiles SET es_equipo = true WHERE correo = '...';
   // 6. Honorario en equipo-interno.html (no enlazado en el menú público).
   // 7. plausibleDomain para el contador.
-  // 8. Linktree: agenda.html o el sitio; no el dominio caído ni el calendar.app abierto.
+  // 8. Linktree: primer enlace = sitio Pages; segundo = agenda si hace falta.
+  //    No el dominio caído ni solo el calendar.app abierto. Ver docs/09-checklist-redes.md.
   // 9. Lookalike Meta desde el Instagram público, aterrizaje agenda.html?desde=meta&codigo=
   // 10. Secrets de Mercado Pago en crear-pago y webhook-pago; nunca en este archivo.
+  //
+  // desde= vigentes (métricas / origen del CTA):
+  //   portada, portada-cierre, clinica, contacto, equipo, honorarios, header,
+  //   sociedad, biblioteca, areas, psicosis, grafo, agenda, meta, calendario
   window.PSICONEXSOC = {
     origin: "https://ljofreflor.github.io",
     base: "/psiconexsoc/",
     futureOrigin: "https://psiconexsoc.com",
     telefono: "+56981216395",
     telefonoTexto: "+56 9 8121 6395",
+    // Correo público para mailto de respaldo del formulario. Vacío = solo teléfono.
+    correoContacto: "",
     calendarioGoogle: "https://calendar.app.google/C9fMj6JkVmG1vV1B7",
     agendaHoras: ["09:00", "10:10", "11:20", "15:00", "16:10", "17:20"],
     honorarioClp: null,

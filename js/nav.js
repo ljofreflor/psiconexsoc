@@ -64,6 +64,8 @@
     var modality = (form.querySelector('[name="modalidad"]') || {}).value || "";
     var reason = (form.querySelector('[name="motivo"]') || {}).value || "";
     var consent = form.querySelector('[name="consentimiento"]');
+    var desde = (cfg.param && cfg.param("desde")) || "";
+    var motivoConOrigen = desde ? ("[desde=" + desde + "] " + reason).trim() : reason;
     if (consent && !consent.checked) {
       setStatus("Necesitamos tu consentimiento para enviar la solicitud.");
       return;
@@ -71,11 +73,24 @@
 
     setStatus("Enviando…");
     if (window.PSICONEXSOC && window.PSICONEXSOC.medir) {
-      window.PSICONEXSOC.medir("Formulario");
+      window.PSICONEXSOC.medir("Formulario", { desde: desde || "contacto" });
     }
 
     if (!cfg.supabaseUrl || !cfg.supabaseAnonKey || !window.supabase) {
-      setStatus("El formulario aún no tiene destino. Llama al " + phone + " o reserva desde la cuenta.");
+      if (cfg.correoContacto) {
+        var asunto = encodeURIComponent("Solicitud PSICONEXSOC");
+        var cuerpo = encodeURIComponent(
+          "Nombre: " + name + "\n" +
+          "Correo: " + email + "\n" +
+          "Modalidad: " + modality + "\n" +
+          "Origen: " + (desde || "contacto") + "\n" +
+          "Motivo: " + reason + "\n"
+        );
+        window.location.href = "mailto:" + cfg.correoContacto + "?subject=" + asunto + "&body=" + cuerpo;
+        setStatus("Se abrió tu correo. Si no, llama al " + phone + " o reserva en la agenda.");
+        return;
+      }
+      setStatus("El formulario aún no tiene destino. Llama al " + phone + ", copia el teléfono abajo o reserva en la agenda.");
       return;
     }
 
@@ -84,7 +99,7 @@
       p_nombre: name,
       p_correo: email,
       p_modalidad: modality,
-      p_motivo: reason
+      p_motivo: motivoConOrigen
     }).then(function (result) {
       if (result.error) {
         setStatus("No se pudo enviar. Llama al " + phone + ".");

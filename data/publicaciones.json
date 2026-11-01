@@ -1,5 +1,17 @@
 [
   {
+    "slug": "el-grafo-del-deseo",
+    "titulo": "El laberinto de lo que queremos",
+    "bajada": "El grafo del deseo, leído paso a paso: cómo la necesidad tropieza con el lenguaje.",
+    "autor": "PSICONEXSOC",
+    "fecha": "2026-09-15",
+    "minutos": 12,
+    "nivel": "Profundización",
+    "tipo": "ensayo",
+    "href": "biblioteca/el-grafo-del-deseo.html",
+    "estado": "publicado"
+  },
+  {
     "slug": "la-palabra-tiene-efectos",
     "titulo": "La palabra tiene efectos",
     "bajada": "Por qué la clínica empieza cuando alguien puede decir, y no cuando se le aplica un nombre.",
@@ -7,6 +19,7 @@
     "fecha": "2026-09-07",
     "minutos": 8,
     "nivel": "Introducción",
+    "tipo": "ensayo",
     "href": "biblioteca/la-palabra-tiene-efectos.html",
     "estado": "borrador"
   },
@@ -18,6 +31,7 @@
     "fecha": "2026-09-07",
     "minutos": 10,
     "nivel": "Profundización",
+    "tipo": "ensayo",
     "href": "biblioteca/el-malestar-tambien-es-de-epoca.html",
     "estado": "borrador"
   },
@@ -29,6 +43,7 @@
     "fecha": "2026-09-07",
     "minutos": 12,
     "nivel": "Lectura especializada",
+    "tipo": "ensayo",
     "href": "biblioteca/las-psicosis-y-sus-vertientes.html",
     "estado": "borrador"
   }
